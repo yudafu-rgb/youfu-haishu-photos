@@ -14,7 +14,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="img/favicon-192.png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=20261015">
+<link rel="stylesheet" href="style.css?v=20261015b">
 </head>
 <body>
 
@@ -55,6 +55,25 @@
       <p>从福州市区开车约 40 分钟，长乐机场约 30 分钟。住客停车免费。</p>
     </div>
     <figure><img src="img/aerial.jpg" alt="从楼上看度假村：中间是花坛，四周是彩色的别墅" loading="lazy" width="1400" height="1050"></figure>
+  </div>
+</section>
+
+<section id="video" class="vids-sec">
+  <div class="wrap">
+    <div class="head">
+      <h2>先看一眼</h2>
+      <p>都是在度假村实拍的，只剪短、稳了稳画面、调了调颜色。</p>
+    </div>
+    <div class="vids">
+      <figure class="vid wide">
+        <video src="video/rooms.mp4" poster="video/rooms.jpg" muted loop playsinline controls preload="none" aria-label="别墅里面：客厅、榻榻米、双床房"></video>
+        <figcaption>别墅里面：客厅、榻榻米、双床房</figcaption>
+      </figure>
+      <figure class="vid tall">
+        <video src="video/seaside.mp4" poster="video/seaside.jpg" muted loop playsinline controls preload="none" aria-label="从别墅走到海边，夜里的打铁花"></video>
+        <figcaption>从别墅走到海边</figcaption>
+      </figure>
+    </div>
   </div>
 </section>
 
@@ -243,5 +262,19 @@
     <span>福建省福州市马尾区琅岐镇龙鼓度假村101号</span>
   </div>
 </footer>
+<script>
+(function(){
+  var vs=document.querySelectorAll('.vid video');
+  if(!('IntersectionObserver' in window)) return;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce) return;
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    var v=e.target;
+    if(e.isIntersecting){ if(v.dataset.user!=='paused'){ var p=v.play(); if(p&&p.catch) p.catch(function(){}); } }
+    else if(!v.paused){ v.pause(); }
+  });},{threshold:0.5});
+  vs.forEach(function(v){ v.addEventListener('pause',function(){ if(document.visibilityState==='visible' && v.getBoundingClientRect().top<innerHeight && v.getBoundingClientRect().bottom>0) v.dataset.user='paused'; }); v.addEventListener('play',function(){ v.dataset.user=''; }); io.observe(v); });
+})();
+</script>
 </body>
 </html>
