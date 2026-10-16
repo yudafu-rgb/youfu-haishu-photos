@@ -58,7 +58,7 @@ dict(slug='food-48h', no=16,
 dict(slug='3days-tips', no=17,
  title='第一次来福州玩3天：路线和5条实用建议', xhs_title='第一次来福州玩3天｜这5条建议能少走弯路‼️',
  desc='第一次来福州 3 天怎么安排：三坊七巷、朱紫坊、上下杭、烟台山、闽江之心、福道、西禅寺、福建博物院的路线，以及逛巷子、走福道、看夜景和预约的建议。',
- cover='fz/zhongzhoudao.jpg', cover_alt='中洲岛和闽江夜景', fallback='g/g-bridge.jpg',
+ cover='fz/zhongzhoudao.jpg', cover_alt='闽江上的中洲岛', fallback='g/g-bridge.jpg',
  tags='#福州旅游 #福州攻略 #福州旅行建议 #三坊七巷 #烟台山 #闽江之心 #琅岐岛 #有福之州',
  body=[
  ('p','我们在琅岐岛开民宿，第一次来福州的客人常问：市区几天怎么排？整理了一条 3 天路线和 5 条建议，不赶路，少走冤枉路。'),
@@ -74,7 +74,7 @@ dict(slug='3days-tips', no=17,
  ('p','夕阳落在红砖老洋房上，比正午更有味道。石厝教堂、爱国路一带顺路走，不用来回折返。'),
  ('h3','4. 中洲岛适合远看'),
  ('p','从闽江两岸看中洲岛的蓝调夜景最好看。专程进岛的话，先了解一下岛上开放情况。'),
- ('img','fz/zhongzhoudao.jpg','中洲岛夜景'),
+ ('img','fz/zhongzhoudao.jpg','闽江上的中洲岛'),
  ('h3','5. 福建博物院提前查预约'),
  ('p','出发前查一下官方开放时间和预约要求，避免跑空。'),
  ('h2','吃住怎么选'),
@@ -146,14 +146,14 @@ dict(slug='hidden-8', no=19,
 dict(slug='slow-2days', no=20,
  title='福州2日慢游：不赶路的玩法', xhs_title='福州2日松弛路线｜不赶路才是正确打开方式',
  desc='福州两天慢慢玩：烟台山老洋房和闽江日落、社区闽菜馆、闽江之心夜景、朱紫坊喝茶、上下杭；还有一天就去琅岐岛海边。',
- cover='fz/yantaishan.webp', cover_alt='烟台山石厝教堂', fallback='roof.jpg',
+ cover='fz/yantaishan.jpg', cover_alt='烟台山石厝教堂', fallback='roof.jpg',
  tags='#福州松弛旅行 #福州两日游 #福州慢生活 #福州闺蜜游 #琅岐岛 #有福海墅',
  body=[
  ('p','不想特种兵式打卡，就试试这条两天的路线：每一站都留时间坐下来，适合闺蜜、情侣或一个人慢慢逛。'),
  ('h2','第一天：老洋房、闽菜和江边夜景'),
  ('h3','下午：烟台山'),
  ('p','先去烟台山。红砖老洋房、石厝教堂和街角小店都适合慢慢走，不用赶固定机位。'),
- ('img','fz/yantaishan.webp','烟台山石厝教堂'),
+ ('img','fz/yantaishan.jpg','烟台山石厝教堂'),
  ('h3','傍晚：等一场闽江日落'),
  ('p','夕阳落在老建筑上，颜色比正午柔和很多。找个视野舒服的位置停下来，比拍完就走更让人记得住。'),
  ('h3','晚餐：社区闽菜馆'),
@@ -293,9 +293,9 @@ def export_notes(dest):
         os.makedirs(d, exist_ok=True)
         imgs = images_of(a)
         lines = [f'【标题】\n{a["xhs_title"]}\n', '【正文】\n' + plain(a['body']) + '\n', '【话题】\n' + a['tags'] + '\n',
-                 '【图片顺序】（福州市区的图在你提供的 images 文件夹；琅岐和民宿的图在 01_宣传精选 / 官网 img 文件夹）']
+                 '【图片顺序】（福州的图在 03_文案 文件夹；琅岐和民宿的图可从官网图片地址保存，或用 01_宣传精选 里的同类照片）']
         for n, im in enumerate(imgs, 1):
-            src = ('images/' + im[3:]) if im.startswith('fz/') else ('官网图片 ' + im)
+            src = ('03_文案\\' + im[3:].replace('yantaishan.jpg','yantaishan.webp')) if im.startswith('fz/') else ('官网图片 youfuhaishu.com/img/' + im)
             lines.append(f'{n:02d}. {src}')
         lines.append('\n【官网同篇】' + f'{SITE}/fz/{a["slug"]}.html')
         open(f'{d}/小红书文案.txt', 'w', encoding='utf-8-sig').write('\n'.join(lines))
