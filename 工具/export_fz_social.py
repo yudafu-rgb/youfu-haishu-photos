@@ -49,7 +49,7 @@ for a in m.A:
     xhs='\n'.join(['【标题】',a['xhs_title'],'','【正文】',body,'',cred,'','【话题】',a['tags'],'',
         '【图片顺序】（本文件夹里，按编号上传；01 是封面）']+files+['',
         '【注意】网络照片是 CC 许可，发布时正文末尾那行「图片来源」要保留。封面如果加字，加字后的图也要按同样的 CC BY-SA 许可、保留署名。',
-        '','【官网同篇】'+f'{m.SITE}/fz/{a["slug"]}.html'])
+        ])
     open(f'{d}/小红书文案.txt','w',encoding='utf-8-sig').write(xhs)
     hs=[b[1] for b in a['body'] if b[0]=='h2'][:6]
     dy='\n'.join([a['xhs_title'],'',a['body'][0][1],'']+['📍'+h for h in hs]+['',cred,'',a['tags'],'','【图片顺序】同小红书：'+'、'.join(files)])
