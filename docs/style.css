@@ -183,3 +183,4 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .vid.tall video{aspect-ratio:9/16}
 .vid figcaption{font-size:15px;color:var(--ink-soft);margin-top:8px}
 @media (max-width:760px){.vids{grid-template-columns:1fr}.vid.tall{max-width:340px;margin:0 auto;width:100%}}
+.vids-sec + section{padding-top:24px}
