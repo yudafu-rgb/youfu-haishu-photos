@@ -198,3 +198,5 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .btn.line-dark{border:1.5px solid var(--ink);color:var(--ink)}
 .around span a{margin-left:6px;white-space:nowrap}
 @media (max-width:820px){.group-card{grid-template-columns:1fr;padding:22px}.group-card img{order:-1}}
+.article h3{font-size:19px;margin:22px 0 6px}
+.article figcaption{font-size:14px;color:var(--ink-soft);margin-top:6px}

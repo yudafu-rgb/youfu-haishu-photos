@@ -201,7 +201,8 @@ HEAD = '''<!doctype html>
   <a class="brand" href="../" aria-label="有福海墅 首页"><img src="../img/logo.png" alt="">有福海墅</a>
   <nav aria-label="页面导航">
     <a href="../#rooms">房型</a>
-    <a href="./">攻略</a>
+    <a href="./">琅岐攻略</a>
+    <a href="../fz/">福州攻略</a>
     <a href="../#book">预订</a>
   </nav>
 </header>
