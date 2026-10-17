@@ -14,7 +14,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="img/favicon-192.png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=20261016e">
+<link rel="stylesheet" href="style.css?v=20261017a">
 </head>
 <body>
 
@@ -24,7 +24,8 @@
     <nav aria-label="页面导航">
       <a href="#rooms">房型</a>
       <a href="#villa">别墅</a>
-      <a href="#around">周边</a>
+      <a href="#around">周边玩乐</a>
+      <a href="#reviews">住客评价</a>
       <a href="#group">包栋</a>
       <a href="guide/">琅岐攻略</a>
       <a href="fz/">福州攻略</a>
@@ -108,15 +109,15 @@
   <div class="wrap">
     <div class="head">
       <h2>先看一眼</h2>
-      <p>度假村实拍，配了讲解和海浪声。默认静音播放，点视频上的喇叭就能听。</p>
+      <p>度假村实拍，配了讲解和海浪声。电脑上滚到这里会静音自动播放；手机上点一下再播，用的是省流量的小视频。</p>
     </div>
     <div class="vids">
       <figure class="vid wide">
-        <video src="video/rooms.mp4?v=4" poster="video/rooms.jpg?v=4" muted loop playsinline controls preload="none" aria-label="别墅里面：客厅、榻榻米、双床房"></video>
+        <video src="video/rooms.mp4?v=4" data-src-m="video/rooms-m.mp4?v=4" poster="video/rooms.jpg?v=4" muted loop playsinline controls preload="none" aria-label="别墅里面：客厅、榻榻米、双床房"></video>
         <figcaption>别墅里面：客厅、榻榻米、双床房</figcaption>
       </figure>
       <figure class="vid tall">
-        <video src="video/seaside.mp4?v=4" poster="video/seaside.jpg?v=4" muted loop playsinline controls preload="none" aria-label="从别墅走到海边，夜里的打铁花"></video>
+        <video src="video/seaside.mp4?v=4" data-src-m="video/seaside-m.mp4?v=4" poster="video/seaside.jpg?v=4" muted loop playsinline controls preload="none" aria-label="从别墅走到海边，夜里的打铁花"></video>
         <figcaption>从别墅走到海边</figcaption>
       </figure>
     </div>
@@ -172,12 +173,12 @@
         <h2>十几个人，包一整栋</h2>
         <p>公司团建、同学会、家族聚会，整栋包下来，三层楼都是自己人。</p>
         <ul class="group-facts">
-          <li><b>5 间房 · 9 张床</b><span>一栋一般住 18 人左右；人更多可以同时包相邻几栋，提前电话确认</span></li>
-          <li><b>一楼</b><span>客厅、麻将桌、牌桌</span></li>
-          <li><b>二楼</b><span>茶室、榻榻米、健身房</span></li>
-          <li><b>三楼天台</b><span>户外桌椅，吹海风看日落；烧烤架免费（食材、炭自带）</span></li>
-          <li><b>出门就是沙滩</b><span>沙滩游戏、大合照、退潮赶海</span></li>
-          <li><b>交通</b><span>长乐机场约 30 分钟，福州市区约 40 分钟</span></li>
+          <li><b>5 间房 · 9 张床</b>：<span>一栋一般住 18 人左右；人更多可以同时包相邻几栋，提前电话确认</span></li>
+          <li><b>一楼</b>：<span>客厅、麻将桌、牌桌</span></li>
+          <li><b>二楼</b>：<span>茶室、榻榻米、健身房</span></li>
+          <li><b>三楼天台</b>：<span>户外桌椅，吹海风看日落；烧烤架免费（食材、炭自带）</span></li>
+          <li><b>出门就是沙滩</b>：<span>沙滩游戏、大合照、退潮赶海</span></li>
+          <li><b>交通</b>：<span>长乐机场约 30 分钟，福州市区约 40 分钟</span></li>
         </ul>
         <div class="btns">
           <a class="btn solid" href="tel:13705088479">电话咨询包栋</a>
@@ -192,9 +193,10 @@
 <section class="alt" id="around">
   <div class="wrap">
     <div class="head">
-      <h2>出门走走</h2>
-      <p>琅岐岛在闽江入海口，一边是江，一边是海。</p>
+      <h2>周边玩乐</h2>
+      <p>琅岐岛在闽江入海口，一边是江，一边是海。出门就是沙滩，退潮能赶海。</p>
     </div>
+    <p class="chips"><a href="guide/ganhai.html">赶海</a><a href="guide/sunset.html">看日落</a><a href="guide/kids-beach.html">带娃玩沙</a><a href="guide/fishing-port.html">渔港海鲜</a><a href="guide/langqi-one-day.html">一日游路线</a><a href="guide/langqi-drive.html">轻自驾慢逛</a><a href="guide/roselle.html">秋天摘洛神花</a><a href="guide/jasmine-tea.html">喝茉莉花茶</a></p>
     <div class="mosaic">
       <img class="w2 h2" src="img/hero.jpg" alt="度假村门口的沙滩，远处海上有一座小礁石" loading="lazy">
       <img src="img/nightbeach.jpg" alt="夜里的海滩，有游客散步" loading="lazy">
@@ -205,16 +207,34 @@
       <img src="img/luohan.jpg" alt="山路边的罗汉石像" loading="lazy">
     </div>
     <ul class="around">
-      <li><b>门口沙滩、赶海</b><span>出门就是。退潮前后两小时最适合赶海，出发前在天气 App 搜「琅岐 潮汐」看时间。挖沙工具可以借，也可以买。<a href="guide/ganhai.html">赶海攻略</a></span></li>
-      <li><b>龙鼓海滩、金鸡报晓</b><span>都在度假村附近。</span></li>
-      <li><b>山上小路、山顶看海</b><span>沿路有罗汉石像，走到山顶能看海、看大桥，傍晚上去看日落。<a href="guide/langqi-one-day.html">一日游路线</a></span></li>
-      <li><b>古牌坊、码头</b><span>码头可以买海鲜，带回来烧烤。</span></li>
-      <li><b>打铁花</b><span>离别墅大约 20 米。场次不固定，看度假村安排，想看的话来之前打电话问一下。</span></li>
-      <li><b>暑期泳池</b><span>度假村游乐场的泳池，只在 7–9 月开放。</span></li>
-      <li><b>龙眼采摘</b><span>龙眼季约 8–9 月，另外收费。</span></li>
-      <li><b>长乐游神</b><span>潭头厚福村，开车约 30 分钟，春节前后最热闹。</span></li>
+      <li><b>门口沙滩、赶海</b> <span>出门就是。退潮前后两小时最适合赶海，出发前在天气 App 搜「琅岐 潮汐」看时间。挖沙工具可以借，也可以买。<a href="guide/ganhai.html">赶海攻略</a></span></li>
+      <li><b>龙鼓海滩、金鸡报晓</b> <span>都在度假村附近。</span></li>
+      <li><b>山上小路、山顶看海</b> <span>沿路有罗汉石像，走到山顶能看海、看大桥，傍晚上去看日落。<a href="guide/langqi-one-day.html">一日游路线</a></span></li>
+      <li><b>古牌坊、码头</b> <span>码头可以买海鲜，带回来烧烤。</span></li>
+      <li><b>打铁花</b> <span>离别墅大约 20 米。场次不固定，看度假村安排，想看的话来之前打电话问一下。</span></li>
+      <li><b>暑期泳池</b> <span>度假村游乐场的泳池，只在 7–9 月开放。</span></li>
+      <li><b>龙眼采摘</b> <span>龙眼季约 8–9 月，另外收费。</span></li>
+      <li><b>长乐游神</b> <span>潭头厚福村每年农历正月初十、正月二十六游神，开车约 30 分钟。</span></li>
     </ul>
     <p class="more"><a href="guide/">琅岐岛攻略：怎么玩、赶海、看日落、带娃、团建 →</a><br><a href="fz/">福州攻略：48小时吃什么、3天怎么走、免费景点、小众去处 →</a></p>
+  </div>
+</section>
+
+<section id="reviews">
+  <div class="wrap">
+    <div class="head">
+      <h2>住客评价</h2>
+      <p>摘自住客在途家、同程等平台留下的公开点评，原话照录，昵称按平台打码显示。</p>
+    </div>
+    <div class="reviews">
+      <figure class="review"><blockquote>「出门就是沙滩」</blockquote><figcaption>E***6 · 途家 · 2026-10</figcaption></figure>
+      <figure class="review"><blockquote>「独栋别墅，上下两层，空调优秀」</blockquote><figcaption>E***6 · 途家 · 2026-10</figcaption></figure>
+      <figure class="review"><blockquote>「宽敞的院子，停车方便还免费」</blockquote><figcaption>E***6 · 途家 · 2026-10</figcaption></figure>
+      <figure class="review"><blockquote>「我们小伙伴一起住的特别开心，会推荐朋友来」</blockquote><figcaption>E***6 · 途家 · 2026-10</figcaption></figure>
+      <figure class="review"><blockquote>「附近是沙滩，有滩涂和礁石小山，很多小小的螃蟹，孩子喜欢」</blockquote><figcaption>石* · 同程 · 2025-08</figcaption></figure>
+      <figure class="review"><blockquote>「房东超级贴心，给了详细的周边美食攻略，还贴心准备了儿童餐具，太适合带娃家庭了」</blockquote><figcaption>C***1 · 2025-12</figcaption></figure>
+      <figure class="review"><blockquote>「老板娘和老板是一对老夫妻，很和善，下次还会来」</blockquote><figcaption>5***3 · 2026-04</figcaption></figure>
+    </div>
   </div>
 </section>
 
@@ -250,12 +270,12 @@
   <div class="wrap">
     <div class="head"><h2>入住须知</h2></div>
     <ul class="rules">
-      <li><b>入住和退房</b><span>14:00 以后入住，12:00 以前退房。</span></li>
-      <li><b>人数和加人费</b><span>双床房基础 3 人，大床房基础 2 人，超出的每人每晚加 50 元，整栋按每间房逐间算。</span></li>
-      <li><b>儿童</b><span>12 岁以下儿童和婴幼儿不算人数，不收加人费。</span></li>
-      <li><b>加床</b><span>不提供加床。</span></li>
-      <li><b>吸烟</b><span>室内禁烟。</span></li>
-      <li><b>宠物</b><span>宠物不进房间，可以待在外面花园。</span></li>
+      <li><b>入住和退房</b> <span>14:00 以后入住，12:00 以前退房。</span></li>
+      <li><b>人数和加人费</b> <span>双床房基础 3 人，大床房基础 2 人，超出的每人每晚加 50 元，整栋按每间房逐间算。</span></li>
+      <li><b>儿童</b> <span>12 岁以下儿童和婴幼儿不算人数，不收加人费。</span></li>
+      <li><b>加床</b> <span>不提供加床。</span></li>
+      <li><b>吸烟</b> <span>室内禁烟。</span></li>
+      <li><b>宠物</b> <span>宠物不进房间，可以待在外面花园。</span></li>
     </ul>
   </div>
 </section>
@@ -293,6 +313,9 @@
 <script>
 (function(){
   var vs=document.querySelectorAll('.vid video');
+  var c=navigator.connection||{};
+  var small=(window.matchMedia&&window.matchMedia('(max-width:760px)').matches)||c.saveData||/(^|-)(2g|3g)$/.test(c.effectiveType||'');
+  if(small){ vs.forEach(function(v){ if(v.dataset.srcM) v.src=v.dataset.srcM; }); return; }
   if(!('IntersectionObserver' in window)) return;
   var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reduce) return;

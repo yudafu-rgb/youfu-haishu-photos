@@ -196,7 +196,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .group-text>p{color:var(--ink-soft)}
 .group-facts{list-style:none;padding:0;margin:8px 0 18px}
 .group-facts li{padding:8px 0;border-bottom:1px solid #e3ecf1}
-.group-facts b{font-weight:600;margin-right:10px}
+.group-facts b{font-weight:600}
 .group-facts span{color:var(--ink-soft);font-size:15px}
 .btn.line-dark{border:1.5px solid var(--ink);color:var(--ink)}
 .around span a{margin-left:6px;white-space:nowrap}
@@ -216,3 +216,11 @@ ul.credits{list-style:none;padding:0}
 ul.credits li{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #e3ecf1;font-size:14px}
 ul.credits img{width:110px;height:80px;object-fit:cover;border-radius:4px;flex:none}
 footer a{color:var(--ink-soft)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+.chips a{display:inline-block;padding:6px 14px;border:1px solid #b9cdd8;border-radius:999px;font-size:15px;color:var(--ink);text-decoration:none;background:#fff}
+.chips a:hover{border-color:var(--ink)}
+.reviews{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.review{margin:0;background:#fff;border:1px solid #d6e3ea;border-radius:10px;padding:20px 22px;display:flex;flex-direction:column;justify-content:space-between}
+.review blockquote{margin:0 0 12px;font-family:var(--serif);font-size:18px;line-height:1.6}
+.review figcaption{color:var(--ink-soft);font-size:14px}
