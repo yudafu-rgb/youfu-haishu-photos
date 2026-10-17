@@ -7,6 +7,38 @@ os.makedirs(OUT, exist_ok=True)
 
 # Each body is a list of blocks: ('p', text) | ('h2', text) | ('img', file, alt) | ('ul', [items]) | ('tip', [items])
 A = [
+dict(slug='langqi-drive', title='琅岐轻自驾慢逛线：半天到一天刚刚好', short='琅岐轻自驾慢逛线',
+ desc='福州周边周末去哪：开车上琅岐岛，看江海交界的堤岸、岛上田园和村镇。福州市区约 40 分钟，半天到一天的路线、吃饭、停车和出发前提醒，9 张攻略卡一次看完。',
+ cover='lq-card-01', cover_alt='琅岐轻自驾慢逛线：半天到一天，适合周末慢慢逛',
+ body=[
+ ('p','琅岐这条线不靠「网红感」，靠的是轻松：江海交界的堤岸、岛上的田园、村镇里的烟火气，开车边走边看，半天到一天刚好。下面 9 张卡，按顺序看就能出发。'),
+ ('h2','先看适不适合去'),
+ ('img','lq-card-02','适合和不太适合去琅岐的人'),
+ ('ul',['适合：周末想开车散心、想轻松看风景不赶景点、喜欢田园感和江海交界的人。','不太适合：想一次打卡很多景点、想走「超出片网红路线」的人。']),
+ ('p','琅岐不是那种碧海蓝天大沙滩的海岛。不过想踩沙子也有地方：龙鼓度假村门口就是金鸡报晓海滩，退潮还能<a href="ganhai.html">赶海</a>。'),
+ ('h2','从福州怎么去最顺'),
+ ('img','lq-card-03','从福州去琅岐，自驾最合适'),
+ ('p','自驾最合适。福州市区开车约 40 分钟（看路况），过跨江大桥就上岛。看到舒服的堤岸、田园、村镇，随时停下来。不自驾也可以打车上岛，就是没那么灵活。'),
+ ('h2','路线总览'),
+ ('img','lq-card-04','琅岐一天的路线总览'),
+ ('ul',['推荐顺序：进岛 → 江边 / 海边堤岸 → 田园路慢开 → 村镇慢逛 → 找地方吃饭 → 再环一小段 → 返程。','半天轻松版：进岛 → 看江海风景 → 田园慢开 → 吃饭 → 回程。','一天完整版：进岛 → 堤岸风景 → 田园 / 村镇慢逛 → 午饭 → 下午继续绕岛看风景 → 傍晚返程。']),
+ ('h2','一天这样安排最舒服'),
+ ('img','lq-card-05','上午、中午、下午、傍晚的安排'),
+ ('ul',['上午：从福州出发进岛，先看一段江海交界的风景，慢慢开，不急着打卡。','中午：在村镇或岛上餐馆吃饭，海鲜、家常菜、本地小吃都行。','下午：沿路继续慢逛，看田园、公路、村镇、堤岸。','傍晚：差不多了就返程，不用把行程排太满。']),
+ ('h2','琅岐好看的，是这种气质'),
+ ('img','lq-card-06','琅岐的江海、田园、公路和村镇'),
+ ('ul',['江海交界：水面开阔，视野很舒服。','岛上田园：比起景点，更适合看路上的风景。','轻自驾公路：边开边停，路本身就有意思。','乡镇慢生活：村镇街巷、码头，日常的烟火气。','周末放空：不赶路的时候，这条线更耐看。']),
+ ('h2','琅岐吃什么更稳'),
+ ('img','lq-card-07','琅岐的海鲜、家常菜和小吃'),
+ ('ul',['海鲜、河鲜家常做法：顺路吃，讲究新鲜。','岛上家常菜：简单实在。','福州小吃顺带安排，不用专门跑远。','时令水果、乡镇风味：看到合适的顺手买。']),
+ ('p','点菜挑当天新鲜的，别一下点太多；周末吃饭可以错开饭点。'),
+ ('h2','怎么走更省心'),
+ ('img','lq-card-08','交通和停车建议'),
+ ('ul',['自驾最推荐，打车也行，公交能到但适合不赶时间的人。','停车找村镇周边、公共区域和规范车位，别停在窄路、转弯口和居民出入的地方。','周末车会多一点，放慢节奏。']),
+ ('h2','去之前先看这几个提醒'),
+ ('img','lq-card-09','出发前的几个提醒'),
+ ('tip',['把它当「轻自驾慢逛线」，别按纯海边度假线期待。','别把行程排太满，半天到一天最合适。','天气不好时体验会打折，出发前看看天气。','别只盯着打卡点，好看的常常在路上。','周末尽量早点出发。','想多待一晚，就住在海边，第二天早上去沙滩走走。']),
+ ]),
 dict(slug='langqi-island', title='琅岐岛周末攻略：福州人的私藏小海岛', short='琅岐岛周末攻略',
  desc='福州市区开车约 40 分钟的琅岐岛怎么玩：红光湖、金鸡报晓海滩、风水林、红蟳公社、罗汉石像小路、码头和金牌山炮台，附两三天玩法和必吃。',
  cover='g-bridge', cover_alt='从琅岐岛山上看闽江口和跨江大桥',
@@ -194,7 +226,7 @@ HEAD = '''<!doctype html>
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32.png">
 <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css?v=20261015">
+<link rel="stylesheet" href="../style.css?v=20261016e">
 </head>
 <body>
 <header class="bar solid">
@@ -230,7 +262,9 @@ def render_body(blocks):
         k = b[0]
         if k == 'p': out.append(f'<p>{b[1]}</p>')  # trusted text; may contain a link
         elif k == 'h2': out.append(f'<h2>{esc(b[1])}</h2>')
-        elif k == 'img': out.append(f'<figure><img src="../img/g/{b[1]}.jpg" alt="{esc(b[2])}" loading="lazy"></figure>')
+        elif k == 'img':
+            cls = ' class="card"' if b[1].startswith('lq-card') else ''
+            out.append(f'<figure{cls}><img src="../img/g/{b[1]}.jpg" alt="{esc(b[2])}" loading="lazy"></figure>')
         elif k == 'ul': out.append('<ul>' + ''.join(f'<li>{esc(i)}</li>' for i in b[1]) + '</ul>')
         elif k == 'tip': out.append('<div class="tip"><b>小贴士</b><ul>' + ''.join(f'<li>{esc(i)}</li>' for i in b[1]) + '</ul></div>')
     return '\n'.join(out)
@@ -244,7 +278,7 @@ for i, a in enumerate(A):
   <div class="wrap narrow">
     <p class="crumb"><a href="../">首页</a> / <a href="./">游玩攻略</a></p>
     <h1>{esc(a['title'])}</h1>
-    <figure class="cover"><img src="../img/g/{a['cover']}.jpg" alt="{esc(a['cover_alt'])}"></figure>
+    <figure class="cover{' card' if a['cover'].startswith('lq-card') else ''}"><img src="../img/g/{a['cover']}.jpg" alt="{esc(a['cover_alt'])}"></figure>
 {render_body(a['body'])}
 {CTA}
     <p class="next">下一篇：<a href="{nxt['slug']}.html">{esc(nxt['title'])}</a></p>
@@ -256,7 +290,7 @@ for i, a in enumerate(A):
 
 # index
 cards = '\n'.join(f'''    <a class="gcard" href="{a['slug']}.html">
-      <img src="../img/g/{a['cover']}.jpg" alt="{esc(a['cover_alt'])}" loading="lazy">
+      <img{' class="top"' if a['cover'].startswith('lq-card') else ''} src="../img/g/{a['cover']}.jpg" alt="{esc(a['cover_alt'])}" loading="lazy">
       <h2>{esc(a['short'])}</h2>
       <p>{esc(a['desc'])}</p>
     </a>''' for a in A)
@@ -278,6 +312,9 @@ open(f'{OUT}/index.html', 'w').write(idx)
 # sitemap + robots
 today = datetime.date.today().isoformat()
 urls = [f'{SITE}/', f'{SITE}/en/', f'{SITE}/guide/'] + [f'{SITE}/guide/{a["slug"]}.html' for a in A]
+import glob
+fz=sorted(glob.glob('/tmp/claude-0/s/repo/docs/fz/*.html'))
+urls += [f'{SITE}/fz/'] + [f'{SITE}/fz/{os.path.basename(f)}' for f in fz if not f.endswith(('index.html','credits.html'))]
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'  <url><loc>{u}</loc><lastmod>{today}</lastmod></url>\n' for u in urls) + '</urlset>\n'
 open('/tmp/claude-0/s/repo/docs/sitemap.xml', 'w').write(sm)
 open('/tmp/claude-0/s/repo/docs/robots.txt', 'w').write(f'User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n')
