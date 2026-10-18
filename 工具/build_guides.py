@@ -227,6 +227,23 @@ HEAD = '''<!doctype html>
 <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32.png">
 <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
 <link rel="stylesheet" href="../style.css?v=20261018a">
+<!-- 流量统计：百度统计 + Google Analytics -->
+<script>
+var _hmt = _hmt || [];
+(function() {{
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?ebf592b2a6df131a88687995b05d1eec";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+}})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DLFH4N5N53"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+  gtag('config', 'G-DLFH4N5N53');
+</script>
 </head>
 <body>
 <header class="bar solid">
