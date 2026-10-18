@@ -206,7 +206,7 @@ HEAD = '''<!doctype html>
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32.png">
 <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css?v=''' + CSSV + '''">
+<link rel="stylesheet" href="../style.css?v=20261017c''' + CSSV + '''">
 </head>
 <body>
 <header class="bar solid">
@@ -225,6 +225,13 @@ FOOT = '''<footer>
     <span>福建省福州市马尾区琅岐镇龙鼓度假村101号</span>
   </div>
 </footer>
+<details class="wx-float">
+  <summary aria-label="微信咨询预订"><span>微信<br>咨询</span></summary>
+  <div class="wx-float-pop">
+    <img src="../img/wechat-qr.png" width="140" height="140" alt="有福海墅接待微信二维码" loading="lazy">
+    <p>扫码问空房<br><a href="tel:13705088479">137 0508 8479</a></p>
+  </div>
+</details>
 </body>
 </html>
 '''

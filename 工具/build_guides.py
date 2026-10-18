@@ -226,7 +226,7 @@ HEAD = '''<!doctype html>
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32.png">
 <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css?v=20261016e">
+<link rel="stylesheet" href="../style.css?v=20261017c">
 </head>
 <body>
 <header class="bar solid">
@@ -245,6 +245,13 @@ FOOT = '''<footer>
     <span>福建省福州市马尾区琅岐镇龙鼓度假村101号</span>
   </div>
 </footer>
+<details class="wx-float">
+  <summary aria-label="微信咨询预订"><span>微信<br>咨询</span></summary>
+  <div class="wx-float-pop">
+    <img src="../img/wechat-qr.png" width="140" height="140" alt="有福海墅接待微信二维码" loading="lazy">
+    <p>扫码问空房<br><a href="tel:13705088479">137 0508 8479</a></p>
+  </div>
+</details>
 </body>
 </html>
 '''
@@ -311,7 +318,7 @@ open(f'{OUT}/index.html', 'w').write(idx)
 
 # sitemap + robots
 today = datetime.date.today().isoformat()
-urls = [f'{SITE}/', f'{SITE}/en/', f'{SITE}/guide/'] + [f'{SITE}/guide/{a["slug"]}.html' for a in A]
+urls = [f'{SITE}/', f'{SITE}/en/', f'{SITE}/juhuage.html', f'{SITE}/honghuage.html', f'{SITE}/meiguige.html', f'{SITE}/guide/'] + [f'{SITE}/guide/{a["slug"]}.html' for a in A]
 import glob
 fz=sorted(glob.glob('/tmp/claude-0/s/repo/docs/fz/*.html'))
 urls += [f'{SITE}/fz/'] + [f'{SITE}/fz/{os.path.basename(f)}' for f in fz if not f.endswith(('index.html','credits.html'))]

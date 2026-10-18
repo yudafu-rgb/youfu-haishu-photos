@@ -235,3 +235,5 @@ footer a{color:var(--ink-soft)}
 .wx-float-pop img{width:140px;height:140px;border-radius:6px}
 .wx-float-pop p{margin:8px 0 2px;font-size:13px;color:#333;line-height:1.6}
 .wx-float-pop a{color:#07c160;font-weight:700;text-decoration:none}
+
+.article img.wxqr-inline{display:block;width:180px;height:180px;max-width:180px;padding:8px;background:#fff;border:1px solid #d6e3ea;border-radius:8px;margin:8px 0 16px}
