@@ -318,7 +318,7 @@ open(f'{OUT}/index.html', 'w').write(idx)
 
 # sitemap + robots
 today = datetime.date.today().isoformat()
-urls = [f'{SITE}/', f'{SITE}/en/', f'{SITE}/juhuage.html', f'{SITE}/honghuage.html', f'{SITE}/meiguige.html', f'{SITE}/guide/'] + [f'{SITE}/guide/{a["slug"]}.html' for a in A]
+urls = [f'{SITE}/', f'{SITE}/en/', f'{SITE}/juhuage.html', f'{SITE}/honghuage.html', f'{SITE}/meiguige.html', f'{SITE}/tuanjian.html', f'{SITE}/guide/'] + [f'{SITE}/guide/{a["slug"]}.html' for a in A]
 import glob
 fz=sorted(glob.glob('/tmp/claude-0/s/repo/docs/fz/*.html'))
 urls += [f'{SITE}/fz/'] + [f'{SITE}/fz/{os.path.basename(f)}' for f in fz if not f.endswith(('index.html','credits.html'))]
