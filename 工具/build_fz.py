@@ -206,7 +206,7 @@ HEAD = '''<!doctype html>
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32.png">
 <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css?v=20261017c''' + CSSV + '''">
+<link rel="stylesheet" href="../style.css?v=20261018a''' + CSSV + '''">
 </head>
 <body>
 <header class="bar solid">
