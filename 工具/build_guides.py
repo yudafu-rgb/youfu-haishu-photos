@@ -323,6 +323,8 @@ idx += f'''<main class="article">
 idx += FOOT
 open(f'{OUT}/index.html', 'w').write(idx)
 
+# 注意：guide/bishu.html 为手写页面（不在 A 列表），guide/index.html 中的避暑卡片也是手动添加。
+# 如果将来重构 A 列表，请把 bishu 加进去，或手动保留 index 中的卡片。
 # sitemap + robots
 today = datetime.date.today().isoformat()
 urls = [f'{SITE}/', f'{SITE}/en/', f'{SITE}/juhuage.html', f'{SITE}/honghuage.html', f'{SITE}/meiguige.html', f'{SITE}/tuanjian.html', f'{SITE}/price.html', f'{SITE}/guide/', f'{SITE}/guide/bishu.html'] + [f'{SITE}/guide/{a["slug"]}.html' for a in A]
