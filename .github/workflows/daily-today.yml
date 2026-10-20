@@ -1,0 +1,23 @@
+# 每天北京时间 00:10 重新生成 docs/guide/today.html（日出日落 + 潮汛），有变化就提交。
+name: daily-today
+on:
+  schedule:
+    - cron: '10 16 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install lunardate==0.3.0
+      - run: python3 工具/build_today.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898732+github-actions[bot]@users.noreply.github.com"
+          git add docs/guide/today.html docs/sitemap.xml
+          git diff --cached --quiet || (git commit -m "Daily update: today.html" && git push)
