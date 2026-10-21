@@ -266,7 +266,7 @@ def notices(today):
         out.append('<b>琅岐采摘</b>：现在能摘' + '、'.join(now) + '。<a href="/guide/caizhai.html">哪里摘、怎么收费</a>')
     sea = [n for n, a, b, _, _ in SEAFOOD if in_season(md_, a, b)]
     if sea:
-        out.append('<b>红蟳当季</b>：' + '、'.join(sea) + '正肥，红蟳公社养殖基地可以买。')
+        out.append('<b>红蟳当季</b>：' + '、'.join(sea) + '正肥，联系我们前台帮忙以最优惠价格代买。')
     if m in (6, 7, 8, 9):
         out.append('<b>夏天海边晒</b>：记得防晒、带帽子，白天太晒就傍晚再去沙滩。')
     if m in (12, 1, 2):
