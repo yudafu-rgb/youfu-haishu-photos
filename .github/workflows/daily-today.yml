@@ -1,9 +1,10 @@
-# 每天北京时间 00:10 重新生成 docs/guide/today.html（日出日落、天气、月相、潮汛）和 docs/daily.js（首页大图轮换、近期提示），有变化就提交并推给百度和 IndexNow。
+# 每天北京时间 00:10 重新生成（另外 06:10、12:10、18:10 各刷新一次天气和台风） docs/guide/today.html（日出日落、天气、月相、潮汛）和 docs/daily.js（首页大图轮换、近期提示），有变化就提交并推给百度和 IndexNow。
 # 这里自己的提交不会触发 push-index.yml（GITHUB_TOKEN 的推送不触发其他工作流），所以推送也在这里做。
 name: daily-today
 on:
   schedule:
-    - cron: '10 16 * * *'
+    - cron: '10 16 * * *'   # 北京时间 00:10，每天的正式更新，会推百度
+    - cron: '10 22,4,10 * * *'   # 北京时间 06:10、12:10、18:10，只刷新天气和台风，不推百度（省配额）
   workflow_dispatch:
 permissions:
   contents: write
@@ -28,7 +29,7 @@ jobs:
           git add docs/guide/today.html docs/guide/caizhai.html docs/sitemap.xml docs/daily.js
           if git diff --cached --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; else
             git commit -m "Daily update: today.html" && git push && echo "changed=true" >> "$GITHUB_OUTPUT"; fi
-      - if: steps.commit.outputs.changed == 'true'
+      - if: steps.commit.outputs.changed == 'true' && github.event.schedule != '10 22,4,10 * * *'
         env:
           BAIDU_TOKEN: ${{ secrets.BAIDU_TOKEN }}
         run: python3 工具/push_index.py docs/guide/today.html

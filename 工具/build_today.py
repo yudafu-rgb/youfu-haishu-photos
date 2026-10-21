@@ -17,6 +17,7 @@ LAT, LON = 26.063260, 119.637902  # WGS-84，龙鼓度假村
 TZ = 8
 URL = 'https://youfuhaishu.com/guide/today.html'
 TIDE_PUBLISH = False
+TYPHOONS = []  # build() 开始时填，notices() 里用
 # 琅岐采摘日历（2026-10-21 房东提供）：(名称, 开始月日, 结束月日, 地点, 说明)。结束早于开始表示跨年。
 # 改这里会同时影响首页提示、每日页和 guide/caizhai.html。
 PICKING = [
@@ -185,10 +186,56 @@ def md(d):
     return f"{d.month} 月 {d.day} 日"
 
 
+def typhoons(today):
+    """日本气象厅（JMA）公开的台风路径预报：找出未来 5 天会靠近琅岐的台风。
+    返回 [dict(name, cat, wind, dist, date, level)]，level 'red' = 300 km 以内，'yellow' = 600 km 以内。"""
+    lst = fetch('https://www.jma.go.jp/bosai/typhoon/data/targetTc.json') or []
+    out = []
+    for tc in lst:
+        fc = fetch(f"https://www.jma.go.jp/bosai/typhoon/data/{tc['tropicalCyclone']}/forecast.json")
+        spec = fetch(f"https://www.jma.go.jp/bosai/typhoon/data/{tc['tropicalCyclone']}/specifications.json")
+        if not fc:
+            continue
+        name = fc[0].get('name', {}).get('en') or ''
+        num = str(tc.get('typhoonNumber', ''))[-2:].lstrip('0')
+        best = None
+        for p in fc[1:]:
+            c, t = p.get('center'), p.get('validtime', {}).get('UTC')
+            if not c or not t:
+                continue
+            la1, lo1, la2, lo2 = map(math.radians, (LAT, LON, c[0], c[1]))
+            d = 6371 * 2 * math.asin(math.sqrt(math.sin((la2 - la1) / 2) ** 2
+                                               + math.cos(la1) * math.cos(la2) * math.sin((lo2 - lo1) / 2) ** 2))
+            when = (dt.datetime.fromisoformat(t.replace('Z', '+00:00')) + dt.timedelta(hours=TZ)).date()
+            if best is None or d < best[0]:
+                best = (d, when)
+        if not best or best[0] > 600 or best[1] < today:
+            continue
+        wind = None
+        try:
+            wind = float(spec[1]['maximumWind']['sustained']['m/s'])
+        except (TypeError, KeyError, IndexError, ValueError):
+            pass
+        cat = '台风' if wind is None else ('超强台风' if wind >= 51 else '强台风' if wind >= 41.5 else '台风' if wind >= 32.7
+                                          else '强热带风暴' if wind >= 24.5 else '热带风暴' if wind >= 17.2 else '热带低压')
+        out.append(dict(name=(f'第 {num} 号台风 ' if num else '') + name, cat=cat, wind=wind, dist=round(best[0] / 10) * 10, date=best[1],
+                        level='red' if best[0] <= 300 else 'yellow'))
+    return out
+
+
+def typhoon_text(t):
+    when = f"{t['date'].month} 月 {t['date'].day} 日前后"
+    if t['level'] == 'red':
+        return (f"<b>台风预警</b>：{t['name']}（{t['cat']}）预计{when}从琅岐附近约 {t['dist']} 公里经过，"
+                f"前后几天风大浪高，不要下海、赶海，出行留意气象台预警，订房可以先电话问问。")
+    return f"<b>台风关注</b>：{t['name']}（{t['cat']}）预计{when}距琅岐约 {t['dist']} 公里，路径可能变化，出发前看一下最新预报。"
+
+
 def notices(today):
     """首页和每日页的「近期提示」：季节提醒 + 按农历自动算的节日活动。规则对应 物业信息.md。"""
     out, m = [], today.month
     md_ = m * 100 + today.day
+    out += [typhoon_text(t) for t in TYPHOONS]
     ly = LunarDate.from_solar_date(today.year, today.month, today.day).year
     for y in (ly, ly + 1):
         eve = lunar_to_solar(y - 1, 12, 30)          # 除夕
@@ -356,9 +403,14 @@ def build(today):
         x['wx'] = wx.get(x['d'].isoformat())
         x['tides'] = td.get(x['d'].isoformat(), [])
         print(x['d'], '潮时（模型估算）', ' '.join(k + v for k, v in x['tides']))
+    TYPHOONS[:] = typhoons(today)
+    for t in TYPHOONS:
+        print('台风', t)
     for x in days:
         x['win'] = beach_windows(x) if TIDE_PUBLISH else []
         x['risk'] = (x['wx'] or {}).get('risk', '')
+        if any(t['level'] == 'red' and abs((x['d'] - t['date']).days) <= 1 for t in TYPHOONS):
+            x['risk'] = '台风'
     gold_start, blue_start, blue_end = light_times(today)
     mname, millum, mrise = moon(today)
     for x in days:
@@ -413,6 +465,7 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
     <h1>琅岐今日日出日落、天气和赶海潮汛</h1>
     <p>{datestr}，星期{WEEK[today.weekday()]}，农历{t['lunar']}。本页每天自动更新，住在龙鼓度假村的客人可以照着安排看日出日落、赶海。</p>
 
+    {''.join(f'<p class="alert">🌀 {typhoon_text(ty)}<br><small>路径来自日本气象厅预报，以<a href="http://typhoon.nmc.cn/">中央气象台台风网</a>和福州市气象台预警为准。</small></p>' for ty in TYPHOONS)}
     <div class="today">
       <div><span>日出</span><b>{t['rise']}</b></div>
       <div><span>日落</span><b>{t['sset']}</b></div>
