@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>在线预订｜有福海墅</title>
+<meta name="description" content="有福海墅在线预订：选房型、选日期、算价格，微信支付后即锁定房间。门口就是沙滩，福州琅岐岛龙鼓度假村海边别墅。">
+<link rel="canonical" href="https://youfuhaishu.com/booking.html">
+<link rel="stylesheet" href="/style.css?v=20261018b">
+<style>
+main.book{max-width:720px;margin:0 auto;padding:24px 20px 96px}
+main.book h1{font-size:26px;margin:0 0 6px}
+main.book .sub{color:#555;margin:0 0 24px;line-height:1.7}
+.f-group{margin-bottom:20px}
+.f-group label{display:block;font-weight:700;margin-bottom:8px}
+.f-group input,.f-group select{width:100%;padding:11px 12px;font-size:16px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}
+.f-row{display:flex;gap:12px}
+.f-row .f-group{flex:1}
+.room-opt{display:flex;gap:10px;flex-wrap:wrap}
+.room-opt button{padding:10px 16px;font-size:15px;border:1px solid #ccc;border-radius:8px;background:#fff;cursor:pointer}
+.room-opt button.sel{background:#1d2a33;color:#fff;border-color:#1d2a33}
+.price-box{border:1px solid #ddd;border-radius:10px;padding:16px 18px;margin:24px 0;background:#fafafa}
+.price-box .line{display:flex;justify-content:space-between;padding:4px 0;color:#333}
+.price-box .total{border-top:1px solid #ddd;margin-top:8px;padding-top:10px;font-weight:700;font-size:18px}
+.price-box .note{color:#888;font-size:13px;margin-top:8px;line-height:1.6}
+.btn-book{display:block;width:100%;padding:14px;font-size:17px;background:#1d2a33;color:#fff;border:0;border-radius:10px;cursor:pointer}
+.btn-book:disabled{background:#999;cursor:not-allowed}
+.msg{margin-top:14px;padding:12px 14px;border-radius:8px;display:none;line-height:1.7}
+.msg.ok{display:block;background:#eef7ee;color:#235c2e}
+.msg.err{display:block;background:#fdf0f0;color:#8a2a2a}
+.back{margin-top:24px;text-align:center}
+.back a{color:#1d2a33}
+</style>
+</head>
+<body>
+<main class="book">
+<h1>在线预订</h1>
+<p class="sub">选房型、选日期，价格实时算出，微信支付后即锁定房间。直接渠道（官网+小程序）共用一个库存，付完即锁房，不超卖。</p>
+
+<div class="f-group">
+<label>房型</label>
+<div class="room-opt" id="roomOpts">
+<button type="button" data-room="twin" class="sel">单间 · 海景双床房</button>
+<button type="button" data-room="king">单间 · 海景大床房</button>
+<button type="button" data-room="villa">整栋包栋</button>
+</div>
+</div>
+
+<div class="f-row">
+<div class="f-group">
+<label for="checkin">入住日期</label>
+<input type="date" id="checkin">
+</div>
+<div class="f-group">
+<label for="checkout">退房日期</label>
+<input type="date" id="checkout">
+</div>
+</div>
+
+<div class="f-group">
+<label for="guests">入住人数</label>
+<select id="guests">
+<option value="1">1 人</option>
+<option value="2" selected>2 人</option>
+<option value="3">3 人</option>
+<option value="4">4 人</option>
+<option value="5">5 人</option>
+<option value="6">6 人</option>
+<option value="10">10 人左右</option>
+<option value="18">18 人左右</option>
+<option value="30">30 人以上（包栋）</option>
+</select>
+</div>
+
+<div class="price-box" id="priceBox">
+<div class="line"><span>房型</span><span id="pRoom">单间 · 海景双床房</span></div>
+<div class="line"><span>入住晚数</span><span id="pNights">—</span></div>
+<div class="line"><span>平日（周日至周四）</span><span id="pWeekday">—</span></div>
+<div class="line"><span>周末（周五、周六）</span><span id="pWeekend">—</span></div>
+<div class="line total"><span>合计</span><span id="pTotal">请先选日期</span></div>
+<div class="note">单间平日 ¥388/晚，周末（周五、周六）¥488/晚；整栋包栋平日 ¥1798/晚，周末 ¥1988/晚。价格以云端库存接口返回为准，此处为本地试算。</div>
+</div>
+
+<div class="f-group">
+<label for="guestName">入住人姓名</label>
+<input type="text" id="guestName" placeholder="请填写入住人姓名" autocomplete="name">
+</div>
+<div class="f-group">
+<label for="guestPhone">手机号码</label>
+<input type="tel" id="guestPhone" placeholder="请填写手机号码，用于接收确认信息" autocomplete="tel">
+</div>
+
+<button class="btn-book" id="bookBtn" type="button">微信支付并锁定房间</button>
+<div class="msg" id="msg"></div>
+
+<p class="back"><a href="/">← 回首页</a> · <a href="/price.html">价格说明</a> · 订房咨询 <a href="tel:13705088479">13705088479</a></p>
+</main>
+
+<script>
+// 价格表（与 PMS 口径一致；如调价只改这里，后端以云端为准）
+var PRICES = {
+  twin:  {name: "单间 · 海景双床房", weekday: 388, weekend: 488},
+  king:  {name: "单间 · 海景大床房", weekday: 388, weekend: 488},
+  villa: {name: "整栋包栋", weekday: 1798, weekend: 1988}
+};
+// 后端接口（云开发云函数 HTTP 触发器，上线时填真实地址）
+var API = {
+  checkAvailability: "",  // POST {roomType, checkIn, checkOut} -> {available, remaining}
+  createOrder: "",         // POST {roomType, checkIn, checkOut, guests, name, phone} -> {orderId, totalPrice, payParams}
+  orderStatus: ""          // GET ?orderId= -> {status}
+};
+var room = "twin";
+var $ = function(id){ return document.getElementById(id); };
+
+document.querySelectorAll("#roomOpts button").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll("#roomOpts button").forEach(function(x){ x.classList.remove("sel"); });
+    b.classList.add("sel");
+    room = b.getAttribute("data-room");
+    calc();
+  });
+});
+
+function calc(){
+  var ci = $("checkin").value, co = $("checkout").value;
+  var pr = PRICES[room];
+  $("pRoom").textContent = pr.name;
+  if(!ci || !co){ $("pNights").textContent = "—"; $("pWeekday").textContent = "—"; $("pWeekend").textContent = "—"; $("pTotal").textContent = "请先选日期"; return null; }
+  var d1 = new Date(ci + "T00:00:00"), d2 = new Date(co + "T00:00:00");
+  var nights = Math.round((d2 - d1) / 86400000);
+  if(nights <= 0){ $("pNights").textContent = "退房日期须晚于入住日期"; $("pWeekday").textContent = "—"; $("pWeekend").textContent = "—"; $("pTotal").textContent = "—"; return null; }
+  var wd = 0, we = 0, total = 0;
+  for(var i = 0; i < nights; i++){
+    var d = new Date(d1.getTime() + i * 86400000);
+    var day = d.getDay(); // 5=周五, 6=周六
+    if(day === 5 || day === 6){ we++; total += pr.weekend; } else { wd++; total += pr.weekday; }
+  }
+  $("pNights").textContent = nights + " 晚";
+  $("pWeekday").textContent = wd ? wd + " 晚 × ¥" + pr.weekday : "—";
+  $("pWeekend").textContent = we ? we + " 晚 × ¥" + pr.weekend : "—";
+  $("pTotal").textContent = "¥" + total;
+  return {nights: nights, total: total};
+}
+
+$("checkin").addEventListener("change", calc);
+$("checkout").addEventListener("change", calc);
+
+// 默认日期：今天入住、明天退房（北京时间）
+(function(){
+  var now = new Date(Date.now() + 8 * 3600 * 1000); // UTC+8
+  var t = now.toISOString().slice(0, 10);
+  var tm = new Date(now.getTime() + 86400000).toISOString().slice(0, 10);
+  $("checkin").value = t;
+  $("checkout").value = tm;
+  calc();
+})();
+
+function showMsg(text, ok){
+  var m = $("msg");
+  m.textContent = text;
+  m.className = "msg " + (ok ? "ok" : "err");
+}
+
+$("bookBtn").addEventListener("click", function(){
+  var r = calc();
+  if(!r){ showMsg("请先选好入住和退房日期，且退房日期须晚于入住日期。", false); return; }
+  var name = $("guestName").value.trim();
+  var phone = $("guestPhone").value.trim();
+  if(!name){ showMsg("请填写入住人姓名。", false); return; }
+  if(!/^1[3-9]\d{9}$/.test(phone)){ showMsg("请填写正确的 11 位手机号码。", false); return; }
+  if(!API.createOrder){
+    showMsg("预订页前端已就绪，正在等云开发后端接口地址。接好接口后，这里会创建订单并拉起微信支付。订房咨询可先打 13705088479。", false);
+    return;
+  }
+  // 接好接口后的流程：创建订单 -> 拉起微信支付 -> 支付成功即锁房
+  var btn = $("bookBtn");
+  btn.disabled = true;
+  btn.textContent = "正在创建订单…";
+  fetch(API.createOrder, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({roomType: room, checkIn: $("checkin").value, checkOut: $("checkout").value, guests: $("guests").value, name: name, phone: phone, total: r.total})
+  }).then(function(res){ return res.json(); }).then(function(data){
+    if(data && data.payParams){
+      showMsg("订单已创建，订单号 " + (data.orderId || "") + "，请按页面提示完成微信支付，支付成功即锁定房间。", true);
+    } else {
+      showMsg("订单创建失败：" + ((data && data.message) || "请稍后重试，或致电 13705088479。"), false);
+    }
+    btn.disabled = false;
+    btn.textContent = "微信支付并锁定房间";
+  }).catch(function(){
+    showMsg("网络异常，请稍后重试，或致电 13705088479。", false);
+    btn.disabled = false;
+    btn.textContent = "微信支付并锁定房间";
+  });
+});
+</script>
+</body>
+</html>
