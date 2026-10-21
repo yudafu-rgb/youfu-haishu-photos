@@ -40,7 +40,10 @@ var _hmt = _hmt || [];
 table.week{width:100%;border-collapse:collapse;font-size:15px}
 table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.08);text-align:left}
 .tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:13px}
-.tag.big{background:#ffd34d;color:#1d2a33}.warn{color:#c0392b}.tag.mid{background:rgba(0,0,0,.07)}.tag.small{background:rgba(0,0,0,.03)}
+.tag.big{background:#ffd34d;color:#1d2a33}.warn{color:#c0392b}
+.alert{background:#fdecea;border-left:4px solid #c0392b;padding:10px 14px;border-radius:8px}
+.ok{background:#e8f6ec;border-left:4px solid #2e8b57;padding:10px 14px;border-radius:8px}
+.win{color:#2e8b57;font-size:13px}.tag.mid{background:rgba(0,0,0,.07)}.tag.small{background:rgba(0,0,0,.03)}
 </style>
 </head>
 <body>
@@ -62,26 +65,29 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
     <div class="today">
       <div><span>日出</span><b>06:02</b></div>
       <div><span>日落</span><b>17:29</b></div>
-      <div><span>拍照最好看</span><b>16:49</b><span>日落前约 40 分钟</span></div>
+      <div><span>黄金时刻</span><b>16:57</b><span>到日落，天台、沙滩拍照最好看</span></div>
+      <div><span>蓝调时刻</span><b>17:42</b><span>到 18:00，日落后天空发蓝</span></div>
       <div><span>今天潮汛</span><b>中潮</b></div>
-      <div><span>天气</span><b>毛毛雨</b><span>23–28℃，降雨概率 94%</span></div>
+      <div><span>天气</span><b>毛毛雨</b><span>23–28℃，降雨概率 98%</span></div>
       <div><span>月相</span><b>盈凸月</b><span>亮面 73%，月出 14:24</span></div>
     </div>
     <p>今天中潮：退潮后也能下滩，就是没有大潮露得多。</p>
+    <p class="alert">⚠️ 今天下雨，不建议下滩赶海，滩涂和礁石湿滑，在海边也离水远一点。</p>
+    
 
 <h2>近期提示</h2>
-<ul><li><b>洛神花</b>红了：园子里的洛神花住客可以免费采摘。<a href="/guide/roselle.html">看看</a></li></ul>
+<ul><li><b>琅岐采摘</b>：现在能摘杨桃、芭乐、甘蔗、柚子、橄榄、洛神花、龙眼、火龙果。<a href="/guide/caizhai.html">哪里摘、怎么收费</a></li><li><b>红蟳当季</b>：公蟳正肥，红蟳公社养殖基地可以买。</li></ul>
 
 <h2>未来 7 天</h2>
 <table class="week">
 <tr><th>日期</th><th>农历</th><th>日出</th><th>日落</th><th>天气</th><th>潮汛</th></tr>
-<tr><td>10/21 周三</td><td>九月十二 🌔</td><td>06:02</td><td>17:29</td><td>毛毛雨 23–28℃<br><span class="warn">降雨 94%</span></td><td><span class="tag mid">中潮</span></td></tr>
+<tr><td>10/21 周三</td><td>九月十二 🌔</td><td>06:02</td><td>17:29</td><td>毛毛雨 23–28℃<br><span class="warn">降雨 98%</span></td><td><span class="tag mid">中潮</span><br><span class="warn">⚠️ 下雨，不建议下滩</span></td></tr>
 <tr><td>10/22 周四</td><td>九月十三 🌔</td><td>06:03</td><td>17:28</td><td>毛毛雨 21–24℃</td><td><span class="tag mid">中潮</span></td></tr>
-<tr><td>10/23 周五</td><td>九月十四 🌔</td><td>06:03</td><td>17:27</td><td>毛毛雨 21–28℃<br><span class="warn">降雨 57%</span></td><td><span class="tag mid">中潮</span></td></tr>
-<tr><td>10/24 周六</td><td>九月十五 🌔</td><td>06:04</td><td>17:26</td><td>毛毛雨 23–31℃<br><span class="warn">降雨 75%</span></td><td><span class="tag big">大潮</span></td></tr>
-<tr><td>10/25 周日</td><td>九月十六 🌕</td><td>06:05</td><td>17:25</td><td>毛毛雨 23–29℃<br><span class="warn">降雨 59%</span></td><td><span class="tag big">大潮</span></td></tr>
-<tr><td>10/26 周一</td><td>九月十七 🌕</td><td>06:05</td><td>17:24</td><td>雾 22–29℃</td><td><span class="tag big">大潮</span></td></tr>
-<tr><td>10/27 周二</td><td>九月十八 🌕</td><td>06:06</td><td>17:24</td><td>毛毛雨 22–25℃</td><td><span class="tag big">大潮</span></td></tr>
+<tr><td>10/23 周五</td><td>九月十四 🌔</td><td>06:03</td><td>17:27</td><td>毛毛雨 21–28℃<br><span class="warn">降雨 55%</span></td><td><span class="tag mid">中潮</span></td></tr>
+<tr><td>10/24 周六</td><td>九月十五 🌔</td><td>06:04</td><td>17:26</td><td>毛毛雨 23–31℃<br><span class="warn">降雨 76%</span></td><td><span class="tag big">大潮</span></td></tr>
+<tr><td>10/25 周日</td><td>九月十六 🌕</td><td>06:05</td><td>17:25</td><td>毛毛雨 23–28℃<br><span class="warn">降雨 61%</span></td><td><span class="tag big">大潮</span></td></tr>
+<tr><td>10/26 周一</td><td>九月十七 🌕</td><td>06:05</td><td>17:24</td><td>阴 22–29℃</td><td><span class="tag big">大潮</span></td></tr>
+<tr><td>10/27 周二</td><td>九月十八 🌕</td><td>06:06</td><td>17:24</td><td>毛毛雨 23–25℃</td><td><span class="tag big">大潮</span></td></tr>
 </table>
 <p>10月24日、10月25日、10月26日、10月27日 是大潮，想赶海挑这几天。</p>
 

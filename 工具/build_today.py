@@ -17,12 +17,33 @@ LAT, LON = 26.063260, 119.637902  # WGS-84，龙鼓度假村
 TZ = 8
 URL = 'https://youfuhaishu.com/guide/today.html'
 TIDE_PUBLISH = False
-# 采摘季：(开始 月日, 结束 月日, 提示)。来源和核实情况见 物业信息.md「采摘」一节；新品种确认了月份再往这里加。
+# 琅岐采摘日历（2026-10-21 房东提供）：(名称, 开始月日, 结束月日, 地点, 说明)。结束早于开始表示跨年。
+# 改这里会同时影响首页提示、每日页和 guide/caizhai.html。
 PICKING = [
-    (620, 831, '<b>琅岐葡萄季</b>：6 月底早熟品种上市，7–8 月最多，岛上葡萄园可以采摘（开园时间、价格以果园为准）。'),
-    (801, 930, '<b>龙眼季</b>：8–9 月度假村可以采龙眼，另外收费。'),
-    (901, 1130, '<b>洛神花</b>红了：园子里的洛神花住客可以免费采摘。<a href="/guide/roselle.html">看看</a>'),  # 月份待房东确认
+    ('草莓', 1201, 430, '诚信草莓园、青青草莓园、龙凤草莓园', '按斤称重'),
+    ('杨桃', 1001, 430, '永光农场、榕升果园', '按斤称重'),
+    ('芭乐（番石榴）', 1001, 331, '榕升果园', '按斤称重'),
+    ('甘蔗', 1001, 228, '岛上农田', '按根或按斤'),
+    ('柑橘', 1115, 131, '文发采摘园、阡陌农庄', '按斤称重'),
+    ('柚子', 1021, 1231, '岛上果园', '按斤称重'),
+    ('橄榄', 1001, 1231, '岛上果园', '按斤称重'),
+    ('洛神花', 901, 1110, '红蟳公社', '入园消费后可以免费采摘'),
+    ('西瓜', 601, 831, '岛上果园', '按斤称重'),
+    ('葡萄', 625, 831, '万叶葡萄园、新金东农场', '按斤称重'),
+    ('梨', 701, 831, '榕升果园', '按斤称重'),
+    ('龙眼', 701, 1031, '永光农场', '按斤称重；早熟 7–8 月，晚熟（立冬本、小雪本）9–10 月'),
+    ('火龙果', 701, 1031, '榕升果园', '按斤称重'),
+    ('花生', 801, 930, '岛上农田', '部分农场可以体验挖花生，收费'),
 ]
+# 只能买、不能摘的当季水产
+SEAFOOD = [
+    ('公蟳', 701, 1031, '红蟳公社养殖基地', '只卖不采摘'),
+    ('母红膏蟳', 1115, 101, '红蟳公社养殖基地', '只卖不采摘'),
+]
+
+
+def in_season(md_, start, end):
+    return start <= md_ <= end if start <= end else md_ >= start or md_ <= end
 WMO = {0: '晴', 1: '晴', 2: '多云', 3: '阴', 45: '雾', 48: '雾', 51: '毛毛雨', 53: '毛毛雨', 55: '毛毛雨',
        56: '冻雨', 57: '冻雨', 61: '小雨', 63: '中雨', 65: '大雨', 66: '冻雨', 67: '冻雨', 71: '小雪', 73: '中雪',
        75: '大雪', 77: '雪', 80: '阵雨', 81: '阵雨', 82: '强阵雨', 85: '阵雪', 86: '阵雪', 95: '雷阵雨',
@@ -80,10 +101,12 @@ def weather(today):
     d = j['daily']
     out = {}
     for i, day in enumerate(d['time']):
-        wind = d['wind_speed_10m_max'][i]
-        out[day] = dict(sky=WMO.get(d['weather_code'][i], '—'), hi=round(d['temperature_2m_max'][i]),
-                        lo=round(d['temperature_2m_min'][i]), rain=d['precipitation_probability_max'][i],
-                        windy=wind is not None and wind >= 39)  # 39 km/h 约 6 级
+        wind, code, rain = d['wind_speed_10m_max'][i], d['weather_code'][i], d['precipitation_probability_max'][i] or 0
+        windy = wind is not None and wind >= 39  # 39 km/h 约 6 级
+        # 不建议下滩：6 级以上大风、雷雨、大雨，或降雨概率 80% 以上（滩涂和礁石湿滑）
+        risk = '大风' if windy else '雷雨' if code in (95, 96, 99) else '大雨' if code in (65, 67, 82) else '下雨' if rain >= 80 else ''
+        out[day] = dict(sky=WMO.get(code, '—'), hi=round(d['temperature_2m_max'][i]),
+                        lo=round(d['temperature_2m_min'][i]), rain=rain, windy=windy, risk=risk)
     return out
 
 
@@ -189,9 +212,12 @@ def notices(today):
     if m in (7, 8, 9):
         out.append('<b>暑期泳池</b>：度假村游乐场泳池 7–9 月开放，住客可用。')
     md_ = m * 100 + today.day
-    for start, end, text in PICKING:
-        if start <= md_ <= end:
-            out.append(text)
+    now = [n.split('（')[0] for n, a, b, _, _ in PICKING if in_season(md_, a, b)]
+    if now:
+        out.append('<b>琅岐采摘</b>：现在能摘' + '、'.join(now) + '。<a href="/guide/caizhai.html">哪里摘、怎么收费</a>')
+    sea = [n for n, a, b, _, _ in SEAFOOD if in_season(md_, a, b)]
+    if sea:
+        out.append('<b>红蟳当季</b>：' + '、'.join(sea) + '正肥，红蟳公社养殖基地可以买。')
     if m in (6, 7, 8, 9):
         out.append('<b>夏天海边晒</b>：记得防晒、带帽子，白天太晒就傍晚再去沙滩。')
     if m in (12, 1, 2):
@@ -211,6 +237,107 @@ def write_daily_js(today):
     open(os.path.join(DOCS, 'daily.js'), 'w', encoding='utf-8').write(js)
 
 
+def light_times(d):
+    """傍晚的黄金时刻（太阳高度 6° 到日落）和蓝调时刻（太阳在地平线下 4° 到 8°），北京时间 HH:MM。"""
+    obs = ephem.Observer()
+    obs.lat, obs.lon, obs.pressure = str(LAT), str(LON), 0
+    obs.date = dt.datetime(d.year, d.month, d.day, 4)  # 北京时间正午
+    out = []
+    for h in ('6', '-4', '-8'):
+        obs.horizon = h
+        out.append((obs.next_setting(ephem.Sun(), use_center=True).datetime() + dt.timedelta(hours=TZ)).strftime('%H:%M'))
+    return out
+
+
+def beach_windows(day):
+    """白天低潮前后 2 小时的赶海窗口（只算日出后、日落前的部分）。"""
+    out = []
+    for kind, hm in day['tides']:
+        if kind != '低':
+            continue
+        low = dt.datetime.combine(day['d'], dt.time(*map(int, hm.split(':'))))
+        a, b = low - dt.timedelta(hours=2), low + dt.timedelta(hours=2)
+        rise = dt.datetime.combine(day['d'], dt.time(*map(int, day['rise'].split(':'))))
+        sset = dt.datetime.combine(day['d'], dt.time(*map(int, day['sset'].split(':'))))
+        a, b = max(a, rise), min(b, sset)
+        if (b - a).total_seconds() >= 3600:
+            out.append(f"{a:%H:%M}–{b:%H:%M}")
+    return out
+
+
+def page_shell(title, desc, url, og_title, og_img):
+    """用 bishu.html 的页头页脚包一页（统计代码、悬浮微信、底部咨询条跟着走）。"""
+    src = open(os.path.join(DOCS, 'guide', 'bishu.html'), encoding='utf-8').read()
+    head, rest = src.split('<main class="article">', 1)
+    tail = rest.split('</main>', 1)[1]
+    head = re.sub(r'<title>.*?</title>', f'<title>{title}</title>', head)
+    head = re.sub(r'(<meta name="description" content=")[^"]*', r'\g<1>' + desc, head)
+    head = re.sub(r'(<meta property="og:title" content=")[^"]*', r'\g<1>' + og_title, head)
+    head = re.sub(r'(<meta property="og:description" content=")[^"]*', r'\g<1>' + desc, head)
+    head = head.replace('https://youfuhaishu.com/guide/bishu.html', url).replace('img/beach.jpg', og_img)
+    head = re.sub(r'<script type="application/ld\+json">.*?</script>\n', '', head, flags=re.S)
+    return head, tail
+
+
+def build_caizhai(today):
+    """docs/guide/caizhai.html：琅岐采摘日历，按月份列，当月高亮。每月 1 号内容才会变。"""
+    url = 'https://youfuhaishu.com/guide/caizhai.html'
+    desc = '福州琅岐岛一年四季采摘日历：草莓、杨桃、柑橘、葡萄、龙眼、火龙果、洛神花等，每个月能摘什么、去哪个果园、怎么收费。'
+    head, tail = page_shell('琅岐采摘日历：每个月能摘什么｜有福海墅', desc, url, '琅岐采摘日历：每个月能摘什么', 'img/g/g-roselle.jpg')
+    head = head.replace('</head>', """<style>
+.months{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.months div{border:1px solid rgba(0,0,0,.1);border-radius:10px;padding:10px 12px;font-size:14px}
+.months div.now{border:2px solid #ffd34d;background:#fffbea}
+.months b{display:block;font-size:17px;margin-bottom:4px}
+.pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:16px 0}
+.pick div{border:1px solid rgba(0,0,0,.1);border-radius:10px;padding:10px 12px;font-size:15px;line-height:1.6}
+.pick b{font-size:17px;margin-right:8px}.pick small{opacity:.75}
+</style>
+</head>""")
+
+    def mon_range(a, b):
+        part = {1: '', 10: '上旬', 15: '中旬', 21: '下旬', 25: '底'}
+        f = lambda v: f"{v // 100} 月" + part.get(v % 100, '')
+        return f"{f(a)}到{'次年 ' if b < a else ''}{f(b)}"
+
+    cards = []
+    for mo in range(1, 13):
+        names = [n.split('（')[0] for n, a, b, _, _ in PICKING
+                 if any(in_season(mo * 100 + d, a, b) for d in (1, 15, 28))]
+        cards.append(f'<div class="{"now" if mo == today.month else ""}"><b>{mo} 月{"（本月）" if mo == today.month else ""}</b>'
+                     f'{"、".join(names) or "—"}</div>')
+    rows = '\n'.join(f"<div><b>{n}</b>{mon_range(a, b)}<br>📍 {place}<br><small>{note}</small></div>"
+                     for n, a, b, place, note in PICKING)
+    sea = '、'.join(f"{n}（{mon_range(a, b)}）" for n, a, b, _, _ in SEAFOOD)
+    body = f'''<main class="article">
+  <div class="wrap narrow">
+    <p class="crumb"><a href="../">首页</a> / <a href="./">游玩攻略</a></p>
+    <h1>琅岐采摘日历：每个月能摘什么</h1>
+    <p>琅岐岛上果园多，一年四季几乎都有能摘的。下面按月份列出来，黄框是这个月。住在有福海墅，开车去岛上的果园都不远。</p>
+    <div class="months">
+{chr(10).join(cards)}
+    </div>
+
+<h2>去哪摘、怎么收费</h2>
+<div class="pick">
+{rows}
+</div>
+<p><strong>琅岐红蟳：</strong>{sea}最肥，红蟳公社养殖基地可以买，只卖不采摘。</p>
+<p style="font-size:14px;opacity:.7">成熟时间每年会随天气早晚几天，果园开不开园、价格多少，出发前打电话问一下最稳妥。</p>
+
+<aside class="stay">
+  <h2>住在有福海墅</h2>
+  <p>龙鼓度假村里的三栋海边别墅，白天去果园采摘，傍晚回来在门口沙滩看日落。可订单间，也可整栋包下。</p>
+  <a class="btn solid" href="../#book">看怎么预订</a>
+  <a class="btn line" href="../#rooms">看看房间</a>
+</aside>
+
+    <p class="next">相关：<a href="today.html">琅岐今日日出日落、天气和赶海潮汛</a></p>
+  </div>
+</main>'''
+    open(os.path.join(DOCS, 'guide', 'caizhai.html'), 'w', encoding='utf-8').write(head + body + tail)
+
+
 def day_info(d):
     ld = LunarDate.from_solar_date(d.year, d.month, d.day)
     rise, sset = sun_times(d)
@@ -227,6 +354,10 @@ def build(today):
         x['wx'] = wx.get(x['d'].isoformat())
         x['tides'] = td.get(x['d'].isoformat(), [])
         print(x['d'], '潮时（模型估算）', ' '.join(k + v for k, v in x['tides']))
+    for x in days:
+        x['win'] = beach_windows(x) if TIDE_PUBLISH else []
+        x['risk'] = (x['wx'] or {}).get('risk', '')
+    gold_start, blue_start, blue_end = light_times(today)
     mname, millum, mrise = moon(today)
     for x in days:
         x['micon'] = MOON_ICON[moon(x['d'])[0]]
@@ -259,7 +390,10 @@ def build(today):
 table.week{width:100%;border-collapse:collapse;font-size:15px}
 table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.08);text-align:left}
 .tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:13px}
-.tag.big{background:#ffd34d;color:#1d2a33}.warn{color:#c0392b}.tag.mid{background:rgba(0,0,0,.07)}.tag.small{background:rgba(0,0,0,.03)}
+.tag.big{background:#ffd34d;color:#1d2a33}.warn{color:#c0392b}
+.alert{background:#fdecea;border-left:4px solid #c0392b;padding:10px 14px;border-radius:8px}
+.ok{background:#e8f6ec;border-left:4px solid #2e8b57;padding:10px 14px;border-radius:8px}
+.win{color:#2e8b57;font-size:13px}.tag.mid{background:rgba(0,0,0,.07)}.tag.small{background:rgba(0,0,0,.03)}
 </style>
 </head>''')
 
@@ -268,7 +402,8 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
         f"<td>{x['rise']}</td><td>{x['sset']}</td>"
         + (f"<td>{x['wx']['sky']} {x['wx']['lo']}–{x['wx']['hi']}℃" + (f"<br><span class=\"warn\">降雨 {x['wx']['rain']}%</span>" if (x['wx']['rain'] or 0) >= 50 else '') + "</td>" if x['wx'] else ('<td>—</td>' if wx else ''))
         + f"<td><span class=\"tag {x['cls']}\">{x['tide']}</span>"
-        + ('<br>' + ' '.join(k + v for k, v in x['tides'] if k == '低') + ' 低潮' if TIDE_PUBLISH and x['tides'] else '')
+        + (f"<br><span class=\"warn\">⚠️ {x['risk']}，不建议下滩</span>" if x['risk'] else
+           ''.join(f"<br><span class=\"win\">✅ {w}</span>" for w in x['win']))
         + "</td></tr>" for x in days)
     body = f'''<main class="article">
   <div class="wrap narrow">
@@ -279,12 +414,15 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
     <div class="today">
       <div><span>日出</span><b>{t['rise']}</b></div>
       <div><span>日落</span><b>{t['sset']}</b></div>
-      <div><span>拍照最好看</span><b>{t['gold']}</b><span>日落前约 40 分钟</span></div>
+      <div><span>黄金时刻</span><b>{gold_start}</b><span>到日落，天台、沙滩拍照最好看</span></div>
+      <div><span>蓝调时刻</span><b>{blue_start}</b><span>到 {blue_end}，日落后天空发蓝</span></div>
       <div><span>今天潮汛</span><b>{t['tide']}</b></div>
       {f"<div><span>天气</span><b>{w0['sky']}</b><span>{w0['lo']}–{w0['hi']}℃，降雨概率 {w0['rain']}%" + ('，风大' if w0['windy'] else '') + "</span></div>" if w0 else ''}
       <div><span>月相</span><b>{mname}</b><span>亮面 {millum}%{'，月出 ' + mrise if mrise != '—' else ''}</span></div>
     </div>
     <p>今天{t['tide']}：{t['note']}。</p>
+    {f'<p class="alert">⚠️ 今天{t["risk"]}，不建议下滩赶海，滩涂和礁石湿滑，在海边也离水远一点。</p>' if t['risk'] else ''}
+    {('<p class="ok">✅ 今天适合赶海：' + '、'.join(t['win']) + '（低潮前后两小时）</p>') if t['win'] and not t['risk'] else ''}
 
 <h2>近期提示</h2>
 <ul>{''.join(f"<li>{n}</li>" for n in notices(today)[:-1]) or '<li>最近没有特别的活动，海边看日出日落、赶海就很好。</li>'}</ul>
@@ -320,6 +458,7 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
 </main>'''
     open(os.path.join(DOCS, 'guide', 'today.html'), 'w', encoding='utf-8').write(head + body + tail)
     write_daily_js(today)
+    build_caizhai(today)
 
     sm = os.path.join(DOCS, 'sitemap.xml')
     s = open(sm, encoding='utf-8').read()
