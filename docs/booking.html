@@ -77,8 +77,9 @@ main.book .sub{color:#555;margin:0 0 24px;line-height:1.7}
 <div class="line"><span>入住晚数</span><span id="pNights">—</span></div>
 <div class="line"><span>平日（周日至周四）</span><span id="pWeekday">—</span></div>
 <div class="line"><span>周末（周五、周六）</span><span id="pWeekend">—</span></div>
+<div class="line" id="discountLine" style="display:none;"><span>10/31 前八折优惠</span><span id="pDiscount">—</span></div>
 <div class="line total"><span>合计</span><span id="pTotal">请先选日期</span></div>
-<div class="note">单间平日 ¥388/晚，周末（周五、周六）¥488/晚；整栋包栋平日 ¥1798/晚，周末 ¥1988/晚。价格以云端库存接口返回为准，此处为本地试算。</div>
+<div class="note">单间平日 ¥388/晚，周末（周五、周六）¥488/晚；整栋包栋平日 ¥1798/晚，周末 ¥1988/晚。2026年10月31日（含）前的入住夜打八折。入住 14:00，退房 12:00。价格以云端库存接口返回为准，此处为本地试算。</div>
 </div>
 
 <div class="f-group">
@@ -103,6 +104,9 @@ var PRICES = {
   king:  {name: "单间 · 海景大床房", weekday: 388, weekend: 488},
   villa: {name: "整栋包栋", weekday: 1798, weekend: 1988}
 };
+// 八折政策（用户 2026-10-21 确认进直订价）：2026-10-31（含）前的入住夜打八折，向下取整
+var DISCOUNT_END = "2026-10-31";
+var DISCOUNT_RATE = 0.8;
 // 后端接口（云开发云函数 HTTP 触发器，上线时填真实地址）
 var API = {
   checkAvailability: "",  // POST {roomType, checkIn, checkOut} -> {available, remaining}
@@ -125,21 +129,32 @@ function calc(){
   var ci = $("checkin").value, co = $("checkout").value;
   var pr = PRICES[room];
   $("pRoom").textContent = pr.name;
-  if(!ci || !co){ $("pNights").textContent = "—"; $("pWeekday").textContent = "—"; $("pWeekend").textContent = "—"; $("pTotal").textContent = "请先选日期"; return null; }
+  if(!ci || !co){ $("pNights").textContent = "—"; $("pWeekday").textContent = "—"; $("pWeekend").textContent = "—"; $("discountLine").style.display = "none"; $("pTotal").textContent = "请先选日期"; return null; }
   var d1 = new Date(ci + "T00:00:00"), d2 = new Date(co + "T00:00:00");
   var nights = Math.round((d2 - d1) / 86400000);
   if(nights <= 0){ $("pNights").textContent = "退房日期须晚于入住日期"; $("pWeekday").textContent = "—"; $("pWeekend").textContent = "—"; $("pTotal").textContent = "—"; return null; }
-  var wd = 0, we = 0, total = 0;
+  var wd = 0, we = 0, total = 0, origTotal = 0;
   for(var i = 0; i < nights; i++){
     var d = new Date(d1.getTime() + i * 86400000);
     var day = d.getDay(); // 5=周五, 6=周六
-    if(day === 5 || day === 6){ we++; total += pr.weekend; } else { wd++; total += pr.weekday; }
+    var rate = (day === 5 || day === 6) ? pr.weekend : pr.weekday;
+    if(day === 5 || day === 6){ we++; } else { wd++; }
+    origTotal += rate;
+    // 该夜日期在八折截止日（含）前，打八折向下取整
+    var ds = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
+    total += (ds <= DISCOUNT_END) ? Math.floor(rate * DISCOUNT_RATE) : rate;
   }
   $("pNights").textContent = nights + " 晚";
   $("pWeekday").textContent = wd ? wd + " 晚 × ¥" + pr.weekday : "—";
   $("pWeekend").textContent = we ? we + " 晚 × ¥" + pr.weekend : "—";
+  if(total < origTotal){
+    $("discountLine").style.display = "flex";
+    $("pDiscount").textContent = "-¥" + (origTotal - total) + "（原价 ¥" + origTotal + "）";
+  } else {
+    $("discountLine").style.display = "none";
+  }
   $("pTotal").textContent = "¥" + total;
-  return {nights: nights, total: total};
+  return {nights: nights, total: total, origTotal: origTotal};
 }
 
 $("checkin").addEventListener("change", calc);
