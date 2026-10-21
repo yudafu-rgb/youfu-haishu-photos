@@ -7,7 +7,7 @@ import html, os, sys, json
 REPO = '/tmp/claude-0/s/repo'
 OUT = REPO + '/docs/fz'
 SITE = 'https://youfuhaishu.com'
-CSSV = '20261016c'
+CSSV = '20261021'
 CRED = json.load(open(REPO + '/工具/fz_image_credits.json', encoding='utf-8'))
 os.makedirs(OUT, exist_ok=True)
 
@@ -206,7 +206,7 @@ HEAD = '''<!doctype html>
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32.png">
 <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
-<link rel="stylesheet" href="../style.css?v=20261021''' + CSSV + '''">
+<link rel="stylesheet" href="../style.css?v=''' + CSSV + '''">
 <!-- 流量统计：百度统计 + Google Analytics -->
 <script>
 var _hmt = _hmt || [];
