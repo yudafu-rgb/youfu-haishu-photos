@@ -1,4 +1,4 @@
-# 每天北京时间 00:10 重新生成 docs/guide/today.html（日出日落、天气、月相、潮汛），有变化就提交并推给百度和 IndexNow。
+# 每天北京时间 00:10 重新生成 docs/guide/today.html（日出日落、天气、月相、潮汛）和 docs/daily.js（首页大图轮换、近期提示），有变化就提交并推给百度和 IndexNow。
 # 这里自己的提交不会触发 push-index.yml（GITHUB_TOKEN 的推送不触发其他工作流），所以推送也在这里做。
 name: daily-today
 on:
@@ -25,7 +25,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898732+github-actions[bot]@users.noreply.github.com"
-          git add docs/guide/today.html docs/sitemap.xml
+          git add docs/guide/today.html docs/sitemap.xml docs/daily.js
           if git diff --cached --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; else
             git commit -m "Daily update: today.html" && git push && echo "changed=true" >> "$GITHUB_OUTPUT"; fi
       - if: steps.commit.outputs.changed == 'true'

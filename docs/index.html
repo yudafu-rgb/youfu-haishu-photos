@@ -16,6 +16,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="img/favicon-192.png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<script src="daily.js"></script>
 <link rel="stylesheet" href="style.css?v=20261018b">
 <script type="application/ld+json">
 {
@@ -131,24 +132,15 @@ var _hmt = _hmt || [];
 <div class="strip" aria-hidden="true"><i></i><i></i><i></i></div>
 
 <main>
-<!-- 按日期自动切换的提醒。规则见 物业信息.md；春节、游神日期每年要改（下面写的是 2027 年） -->
+<!-- 近期提示：内容由 工具/build_today.py 每天写进 daily.js（季节提醒、农历节日、满月），这里只负责显示 -->
 <div class="wrap" style="padding-top:28px"><div class="price-hint" id="season-note" style="margin:0"></div></div>
 <script>
 (function () {
-  var d = new Date(), md = (d.getMonth() + 1) * 100 + d.getDate(), ymd = d.getFullYear() * 10000 + md;
-  var rules = [
-    [20261201, 20270101, '<b>元旦</b>按周末节假日价，整栋 1988 元/晚。<a href="price.html">看房价</a>'],
-    [20270102, 20270220, '<b>春节</b>（2 月 5 日—20 日）房间最紧，建议提早订；正月初十（2 月 15 日）可以去看长乐游神。<a href="guide/chunjie.html">春节攻略</a>'],
-    [20270221, 20270303, '<b>正月二十六（3 月 3 日）</b>厚福村还有一场游神，已过春节价，按平日价。<a href="guide/chunjie.html">怎么去</a>'],
-    [615, 930, '<b>暑期泳池</b>：度假村游乐场泳池 7–9 月开放，住客可用。'],
-    [801, 930, '<b>龙眼季</b>：8–9 月可以采龙眼，另外收费。']
-  ];
-  var out = rules.filter(function (r) {
-    var v = r[0] > 10000 ? ymd : md;
-    return v >= r[0] && v <= r[1];
-  }).map(function (r) { return '<span class="ph-item" style="display:block">' + r[2] + '</span>'; });
-  if (!out.length) out = ['<span class="ph-item" style="display:block">今天几点日出日落、是不是大潮适合赶海？<a href="guide/today.html">看今日日落和潮汛</a></span>'];
-  document.getElementById('season-note').innerHTML = out.join('');
+  var notes = (window.YF && window.YF.notes) || ['今天几点日出日落、是不是大潮？<a href="/guide/today.html">看今日日出日落和潮汛</a>'];
+  if (notes.length > 1) notes = notes.slice(0, -1);  // 有具体提示时，不再显示通用的「看今日日落」那条
+  document.getElementById('season-note').innerHTML = notes.slice(0, 3).map(function (n) {
+    return '<span class="ph-item" style="display:block">' + n + '</span>';
+  }).join('');
 })();
 </script>
 <section id="intro">

@@ -17,6 +17,7 @@ LAT, LON = 26.063260, 119.637902  # WGS-84，龙鼓度假村
 TZ = 8
 URL = 'https://youfuhaishu.com/guide/today.html'
 TIDE_PUBLISH = False
+ROSELLE_MONTHS = (9, 10, 11)  # 洛神花采摘月份，待房东确认
 WMO = {0: '晴', 1: '晴', 2: '多云', 3: '阴', 45: '雾', 48: '雾', 51: '毛毛雨', 53: '毛毛雨', 55: '毛毛雨',
        56: '冻雨', 57: '冻雨', 61: '小雨', 63: '中雨', 65: '大雨', 66: '冻雨', 67: '冻雨', 71: '小雪', 73: '中雪',
        75: '大雪', 77: '雪', 80: '阵雨', 81: '阵雨', 82: '强阵雨', 85: '阵雪', 86: '阵雪', 95: '雷阵雨',
@@ -145,6 +146,66 @@ def moon_notes(today):
     return out
 
 
+def lunar_to_solar(y, m, d):
+    try:
+        return LunarDate(y, m, d).to_solar_date()
+    except ValueError:  # 腊月没有三十的年份
+        return LunarDate(y, m, d - 1).to_solar_date() + dt.timedelta(days=1)
+
+
+def md(d):
+    return f"{d.month} 月 {d.day} 日"
+
+
+def notices(today):
+    """首页和每日页的「近期提示」：季节提醒 + 按农历自动算的节日活动。规则对应 物业信息.md。"""
+    out, m = [], today.month
+    ly = LunarDate.from_solar_date(today.year, today.month, today.day).year
+    for y in (ly, ly + 1):
+        eve = lunar_to_solar(y - 1, 12, 30)          # 除夕
+        d10, d15, d26 = (lunar_to_solar(y, 1, k) for k in (10, 15, 26))
+        if 0 <= (eve - today).days <= 45 or eve <= today <= d15:
+            out.append(f'<b>春节</b>（除夕 {md(eve)} 至正月十五 {md(d15)}）房间最紧，建议提早订。<a href="/price.html">看房价</a>')
+        if 0 <= (d10 - today).days <= 30:
+            out.append(f'<b>潭头游神临近</b>：正月初十（{md(d10)}）长乐厚福村游神，从度假村开车约 30 分钟。<a href="/guide/chunjie.html">怎么去</a>')
+        elif d10 < today <= d26:
+            out.append(f'<b>正月二十六（{md(d26)}）</b>厚福村还有一场游神，人比初十少一些。<a href="/guide/chunjie.html">怎么去</a>')
+        if 0 <= (d15 - today).days <= 15:
+            out.append(f'<b>元宵（{md(d15)}）</b>：村里有游灯、舞龙舞狮。')
+        mid = lunar_to_solar(y, 8, 15)
+        if 0 <= (mid - today).days <= 30:
+            out.append(f'<b>中秋（{md(mid)}）</b>：在海边别墅赏月，建议提早订。')
+    if m == 12 or (m == 1 and today.day == 1):
+        out.append('<b>元旦</b>按周末节假日价。<a href="/price.html">看房价</a>')
+    start = dt.datetime(today.year, today.month, today.day) - dt.timedelta(hours=TZ)
+    full = (ephem.next_full_moon(start).datetime() + dt.timedelta(hours=TZ)).date()
+    if (full - today).days <= 2:
+        out.append(f'<b>{md(full)} 满月</b>：傍晚到门口沙滩看月亮从海上升起。<a href="/guide/today.html">月出时间</a>')
+    if m in (7, 8, 9):
+        out.append('<b>暑期泳池</b>：度假村游乐场泳池 7–9 月开放，住客可用。')
+    if m in (8, 9):
+        out.append('<b>龙眼季</b>：8–9 月可以采龙眼，另外收费。')
+    if m in ROSELLE_MONTHS:
+        out.append('<b>洛神花</b>红了：园子里的洛神花住客可以免费采摘。<a href="/guide/roselle.html">看看</a>')
+    if m in (6, 7, 8, 9):
+        out.append('<b>夏天海边晒</b>：记得防晒、带帽子，白天太晒就傍晚再去沙滩。')
+    if m in (12, 1, 2):
+        out.append('<b>冬天海边风大</b>：记得带件外套；屋里空调能开暖风，不冷。')
+    out.append('今天几点日出日落、是不是大潮？<a href="/guide/today.html">看今日日出日落和潮汛</a>')
+    return out
+
+
+def write_daily_js(today):
+    """docs/daily.js：首页同步加载，设定当天的大图（CSS 变量 --hero）和近期提示。不是 HTML，不会触发收录推送。"""
+    photos = [l.strip() for l in open(os.path.join(REPO, '工具', 'hero_photos.txt'), encoding='utf-8')
+              if l.strip() and not l.startswith('#') and os.path.exists(os.path.join(DOCS, 'img', l.strip()))]
+    hero = photos[today.toordinal() % len(photos)] if photos else 'hero.jpg'
+    js = ('// 由 工具/build_today.py 每天生成，不要手改\n'
+          f'window.YF = {json.dumps({"date": today.isoformat(), "hero": "/img/" + hero, "notes": notices(today)}, ensure_ascii=False)};\n'
+          'document.documentElement.style.setProperty("--hero", "url(" + window.YF.hero + ")");\n')
+    open(os.path.join(DOCS, 'daily.js'), 'w', encoding='utf-8').write(js)
+
+
 def day_info(d):
     ld = LunarDate.from_solar_date(d.year, d.month, d.day)
     rise, sset = sun_times(d)
@@ -220,6 +281,9 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
     </div>
     <p>今天{t['tide']}：{t['note']}。</p>
 
+<h2>近期提示</h2>
+<ul>{''.join(f"<li>{n}</li>" for n in notices(today)[:-1]) or '<li>最近没有特别的活动，海边看日出日落、赶海就很好。</li>'}</ul>
+
 <h2>未来 7 天</h2>
 <table class="week">
 <tr><th>日期</th><th>农历</th><th>日出</th><th>日落</th>{'<th>天气</th>' if wx else ''}<th>潮汛</th></tr>
@@ -250,6 +314,7 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
   </div>
 </main>'''
     open(os.path.join(DOCS, 'guide', 'today.html'), 'w', encoding='utf-8').write(head + body + tail)
+    write_daily_js(today)
 
     sm = os.path.join(DOCS, 'sitemap.xml')
     s = open(sm, encoding='utf-8').read()

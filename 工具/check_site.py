@@ -39,6 +39,11 @@ for page in pages:
         if not os.path.exists(target):
             problems.append(f'死链：{page} → {ref}')
 
+for name in open(os.path.join(REPO, '工具', 'hero_photos.txt'), encoding='utf-8'):
+    name = name.strip()
+    if name and not name.startswith('#') and not os.path.exists(os.path.join(DOCS, 'img', name)):
+        problems.append(f'首页轮换照片不存在：工具/hero_photos.txt 里的 {name}')
+
 for img in glob.glob(os.path.join(DOCS, '**', '*.*'), recursive=True):
     if img.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')) and os.path.getsize(img) > IMG_MAX_KB * 1024:
         problems.append(f'图片太大（{os.path.getsize(img) // 1024}KB，建议 {IMG_MAX_KB}KB 以内）：{os.path.relpath(img, DOCS)}')

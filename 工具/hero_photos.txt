@@ -1,0 +1,8 @@
+# 首页大图轮换的照片（docs/img/ 下的文件名），每天按顺序换一张。
+# 想加就往下写一行，想去掉就删掉那一行。用横图，长边 1400 以上效果好。
+hero.jpg
+night.jpg
+roof.jpg
+meigui-out.jpg
+nightbeach.jpg
+aerial.jpg
