@@ -188,6 +188,7 @@ def md(d):
 def notices(today):
     """首页和每日页的「近期提示」：季节提醒 + 按农历自动算的节日活动。规则对应 物业信息.md。"""
     out, m = [], today.month
+    md_ = m * 100 + today.day
     ly = LunarDate.from_solar_date(today.year, today.month, today.day).year
     for y in (ly, ly + 1):
         eve = lunar_to_solar(y - 1, 12, 30)          # 除夕
@@ -209,9 +210,10 @@ def notices(today):
     full = (ephem.next_full_moon(start).datetime() + dt.timedelta(hours=TZ)).date()
     if (full - today).days <= 2:
         out.append(f'<b>{md(full)} 满月</b>：傍晚到门口沙滩看月亮从海上升起。<a href="/guide/today.html">月出时间</a>')
+    if 501 <= md_ <= 916:
+        out.append('<b>休渔期</b>：渔港码头现货少，8 月 16 日起附近海域开渔，9 月 16 日全面开渔。<a href="/guide/fishing-port.html">渔港攻略</a>')
     if m in (7, 8, 9):
         out.append('<b>暑期泳池</b>：度假村游乐场泳池 7–9 月开放，住客可用。')
-    md_ = m * 100 + today.day
     now = [n.split('（')[0] for n, a, b, _, _ in PICKING if in_season(md_, a, b)]
     if now:
         out.append('<b>琅岐采摘</b>：现在能摘' + '、'.join(now) + '。<a href="/guide/caizhai.html">哪里摘、怎么收费</a>')
@@ -442,6 +444,7 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
   <li><strong>看日出：</strong>度假村门口的沙滩就能看海上日出，出门走几步，很壮观。想登高看，<a href="bishu.html">白云山观日台</a>也是福州一带看日出的好地方，从度假村开车约 20 分钟，天没亮也能开到观日台附近。</li>
   <li><strong>看日落：</strong>日落前半小时到门口沙滩或山顶，<a href="sunset.html">看日落的几个地方</a>。</li>
   <li><strong>赶海：</strong>大潮日退得最远。具体几点退潮，出发前在天气 App 搜「琅岐 潮汐」，退潮前后两小时最合适。<a href="ganhai.html">赶海攻略</a></li>
+  <li><strong>买海鲜：</strong>琅岐闽江渔港码头傍晚 17:00–20:00 渔船回港，货最新鲜最全，渔民直接摆摊零售；早上 5:30–8:00 有零星上岸。{'现在是休渔期，码头货少。' if 501 <= today.month * 100 + today.day <= 916 else ''}<a href="fishing-port.html">渔港攻略</a></li>
   <li><strong>安全：</strong>涨潮很快，看到水开始往回漫就上岸；礁石滑，穿防滑鞋。</li>
 </ul>
 <p style="font-size:14px;opacity:.7">日出日落、月相按龙鼓度假村坐标计算，误差一两分钟。天气来自 Open-Meteo 预报，出发前再看一眼手机天气。潮汛按农历推算，只表示潮水大小，不是精确潮时，以潮汐表为准。</p>
