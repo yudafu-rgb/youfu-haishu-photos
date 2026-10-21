@@ -12,7 +12,7 @@ SITE = 'https://youfuhaishu.com/'
 IMG_MAX_KB = 800
 # 不需要统计代码、不进 sitemap 的页面
 NOT_PAGES = re.compile(r'(^|/)baidu_verify_')
-NO_SITEMAP_OK = re.compile(r'^fz/credits\.html$')
+NO_SITEMAP_OK = re.compile(r'^(fz/credits|404)\.html$')
 
 problems = []
 pages = sorted(os.path.relpath(p, DOCS) for p in glob.glob(os.path.join(DOCS, '**', '*.html'), recursive=True))
