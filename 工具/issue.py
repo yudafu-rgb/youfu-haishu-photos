@@ -19,7 +19,7 @@ def api(method, path, data=None):
 
 
 def find_open(title):
-    for it in api('GET', '/issues?state=open&labels=自动提醒&per_page=100'):
+    for it in api('GET', '/issues?state=open&per_page=100&labels=' + urllib.parse.quote('自动提醒')):
         if it['title'] == title:
             return it
     return None
