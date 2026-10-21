@@ -1,0 +1,22 @@
+# 每周一北京时间 9:00 体检网站：死链、超大图片、漏统计代码、sitemap 漏页。有问题会标红，GitHub 发邮件提醒。
+name: site-check
+on:
+  schedule:
+    - cron: '0 1 * * 1'
+  push:
+    branches: [main]
+    paths: ['docs/**', '工具/check_site.py']
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            docs
+            工具
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 工具/check_site.py

@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
-"""每日自动生成 docs/guide/today.html：琅岐未来 7 天的日出日落、农历和潮汛（大潮/中潮/小潮）。
+"""每日自动生成 docs/guide/today.html：琅岐未来 7 天的日出日落、天气、月相、农历和潮汛（大潮/中潮/小潮）。
 由 .github/workflows/daily-today.yml 每天北京时间 0 点后运行；也可以手动 python3 工具/build_today.py。
 日出日落按 NOAA 太阳位置公式计算；潮汛按农历日推算，不是精确潮时，页面上写明以潮汐表为准。
+天气和潮时来自 Open-Meteo（免费、不用 key）；拿不到就不显示那一块，页面照常生成。
+潮时是海洋模型的估算（计算点在琅岐东边海上），TIDE_PUBLISH 为 False 时只打印到日志，不上页面，
+等和潮汐表对比几天确认准了再打开。
 页头页脚取自 docs/guide/bishu.html，统计代码、悬浮微信、底部咨询条跟着一起更新。
 """
-import datetime as dt, math, os, re
+import datetime as dt, json, math, os, re, urllib.request
+import ephem
 from lunardate import LunarDate
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -12,6 +16,11 @@ DOCS = os.path.join(REPO, 'docs')
 LAT, LON = 26.063260, 119.637902  # WGS-84，龙鼓度假村
 TZ = 8
 URL = 'https://youfuhaishu.com/guide/today.html'
+TIDE_PUBLISH = False
+WMO = {0: '晴', 1: '晴', 2: '多云', 3: '阴', 45: '雾', 48: '雾', 51: '毛毛雨', 53: '毛毛雨', 55: '毛毛雨',
+       56: '冻雨', 57: '冻雨', 61: '小雨', 63: '中雨', 65: '大雨', 66: '冻雨', 67: '冻雨', 71: '小雪', 73: '中雪',
+       75: '大雪', 77: '雪', 80: '阵雨', 81: '阵雨', 82: '强阵雨', 85: '阵雪', 86: '阵雪', 95: '雷阵雨',
+       96: '雷阵雨', 99: '雷阵雨'}
 WEEK = '一二三四五六日'
 CN_DAY = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
           '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
@@ -45,6 +54,78 @@ def tide_level(lday):
     return '中潮', 'mid', '退潮后也能下滩，就是没有大潮露得多'
 
 
+def fetch(url):
+    for _ in range(3):
+        try:
+            with urllib.request.urlopen(url, timeout=20) as r:
+                return json.load(r)
+        except Exception as e:  # 网络不通就跳过，不影响其他内容
+            err = e
+    print('skip', url.split('?')[0], err)
+    return None
+
+
+def weather(today):
+    j = fetch('https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&timezone=Asia%%2FShanghai&forecast_days=7'
+              '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max'
+              % (LAT, LON))
+    if not j:
+        return {}
+    d = j['daily']
+    out = {}
+    for i, day in enumerate(d['time']):
+        wind = d['wind_speed_10m_max'][i]
+        out[day] = dict(sky=WMO.get(d['weather_code'][i], '—'), hi=round(d['temperature_2m_max'][i]),
+                        lo=round(d['temperature_2m_min'][i]), rain=d['precipitation_probability_max'][i],
+                        windy=wind is not None and wind >= 39)  # 39 km/h 约 6 级
+    return out
+
+
+def tides(today):
+    """海洋模型逐小时海面高度，取局部最高最低点，返回 {日期: [('高'/'低', 'HH:MM'), ...]}。"""
+    j = fetch('https://marine-api.open-meteo.com/v1/marine?latitude=%s&longitude=%s&timezone=Asia%%2FShanghai'
+              '&forecast_days=7&hourly=sea_level_height_msl' % (LAT, LON))
+    if not j:
+        return {}
+    t, v = j['hourly']['time'], j['hourly']['sea_level_height_msl']
+    out = {}
+    for i in range(1, len(v) - 1):
+        if None in (v[i - 1], v[i], v[i + 1]):
+            continue
+        kind = '高' if v[i] > v[i - 1] and v[i] >= v[i + 1] else '低' if v[i] < v[i - 1] and v[i] <= v[i + 1] else None
+        if kind:
+            out.setdefault(t[i][:10], []).append((kind, t[i][11:16]))
+    return out
+
+
+def moon(d):
+    """当天月相名、亮面百分比、月出时间（北京时间）。"""
+    obs = ephem.Observer()
+    obs.lat, obs.lon, obs.elevation = str(LAT), str(LON), 0
+    start = dt.datetime(d.year, d.month, d.day) - dt.timedelta(hours=TZ)  # 北京时间 0 点
+    obs.date = start
+    m = ephem.Moon(start + dt.timedelta(hours=12))
+    illum = round(m.phase)
+    nxt_new = ephem.next_new_moon(start).datetime()
+    prev_new = ephem.previous_new_moon(start).datetime()
+    age = (start - prev_new).total_seconds() / 86400
+    waxing = age < (nxt_new - prev_new).total_seconds() / 172800
+    if illum >= 97:
+        name = '满月'
+    elif illum <= 3:
+        name = '新月'
+    elif illum >= 50:
+        name = '盈凸月' if waxing else '亏凸月'
+    else:
+        name = '娥眉月' if waxing else '残月'
+    try:
+        rise = (obs.next_rising(ephem.Moon()).datetime() + dt.timedelta(hours=TZ))
+        rise = rise.strftime('%H:%M') if rise.date() == d else '—'
+    except ephem.CircumpolarError:
+        rise = '—'
+    return name, illum, rise
+
+
 def day_info(d):
     ld = LunarDate.from_solar_date(d.year, d.month, d.day)
     rise, sset = sun_times(d)
@@ -56,14 +137,22 @@ def day_info(d):
 
 def build(today):
     days = [day_info(today + dt.timedelta(days=i)) for i in range(7)]
+    wx, td = weather(today), tides(today)
+    for x in days:
+        x['wx'] = wx.get(x['d'].isoformat())
+        x['tides'] = td.get(x['d'].isoformat(), [])
+        print(x['d'], '潮时（模型估算）', ' '.join(k + v for k, v in x['tides']))
+    mname, millum, mrise = moon(today)
+    w0 = days[0]['wx']
     t = days[0]
     big = [x for x in days if x['tide'] == '大潮']
     big_txt = ('、'.join(f"{x['d'].month}月{x['d'].day}日" for x in big) + ' 是大潮，想赶海挑这几天。') if big \
         else '这一周没有大潮，下一次大潮在农历初一或十五前后。'
     datestr = f"{today.year}年{today.month}月{today.day}日"
-    title = f'琅岐今日日落和赶海潮汛（{today.month}月{today.day}日更新）｜有福海墅'
+    title = f'琅岐今日日出日落、天气和赶海潮汛（{today.month}月{today.day}日更新）｜有福海墅'
     desc = (f"{datestr}（星期{WEEK[today.weekday()]}，农历{t['lunar']}）福州琅岐岛日出 {t['rise']}、日落 {t['sset']}，"
-            f"今天{t['tide']}。未来 7 天日落时间和赶海潮汛，每天自动更新。")
+            + (f"{w0['sky']} {w0['lo']}–{w0['hi']}℃，" if w0 else '') +
+            f"今天{t['tide']}。未来 7 天日出日落、天气和赶海潮汛，每天自动更新。")
 
     src = open(os.path.join(DOCS, 'guide', 'bishu.html'), encoding='utf-8').read()
     head, rest = src.split('<main class="article">', 1)
@@ -82,42 +171,48 @@ def build(today):
 table.week{width:100%;border-collapse:collapse;font-size:15px}
 table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.08);text-align:left}
 .tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:13px}
-.tag.big{background:#ffd34d;color:#1d2a33}.tag.mid{background:rgba(0,0,0,.07)}.tag.small{background:rgba(0,0,0,.03)}
+.tag.big{background:#ffd34d;color:#1d2a33}.warn{color:#c0392b}.tag.mid{background:rgba(0,0,0,.07)}.tag.small{background:rgba(0,0,0,.03)}
 </style>
 </head>''')
 
     rows = '\n'.join(
         f"<tr><td>{x['d'].month}/{x['d'].day} 周{WEEK[x['d'].weekday()]}</td><td>{x['lunar']}</td>"
-        f"<td>{x['rise']}</td><td>{x['sset']}</td><td><span class=\"tag {x['cls']}\">{x['tide']}</span></td></tr>" for x in days)
+        f"<td>{x['rise']}</td><td>{x['sset']}</td>"
+        + (f"<td>{x['wx']['sky']} {x['wx']['lo']}–{x['wx']['hi']}℃" + (f"<br><span class=\"warn\">降雨 {x['wx']['rain']}%</span>" if (x['wx']['rain'] or 0) >= 50 else '') + "</td>" if x['wx'] else ('<td>—</td>' if wx else ''))
+        + f"<td><span class=\"tag {x['cls']}\">{x['tide']}</span>"
+        + ('<br>' + ' '.join(k + v for k, v in x['tides'] if k == '低') + ' 低潮' if TIDE_PUBLISH and x['tides'] else '')
+        + "</td></tr>" for x in days)
     body = f'''<main class="article">
   <div class="wrap narrow">
     <p class="crumb"><a href="../">首页</a> / <a href="./">游玩攻略</a></p>
-    <h1>琅岐今日日出日落和赶海潮汛</h1>
-    <p>{datestr}，星期{WEEK[today.weekday()]}，农历{t['lunar']}。本页每天自动更新，住在龙鼓度假村的客人可以照着安排看日落、赶海。</p>
+    <h1>琅岐今日日出日落、天气和赶海潮汛</h1>
+    <p>{datestr}，星期{WEEK[today.weekday()]}，农历{t['lunar']}。本页每天自动更新，住在龙鼓度假村的客人可以照着安排看日出日落、赶海。</p>
 
     <div class="today">
       <div><span>日出</span><b>{t['rise']}</b></div>
       <div><span>日落</span><b>{t['sset']}</b></div>
       <div><span>拍照最好看</span><b>{t['gold']}</b><span>日落前约 40 分钟</span></div>
       <div><span>今天潮汛</span><b>{t['tide']}</b></div>
+      {f"<div><span>天气</span><b>{w0['sky']}</b><span>{w0['lo']}–{w0['hi']}℃，降雨概率 {w0['rain']}%" + ('，风大' if w0['windy'] else '') + "</span></div>" if w0 else ''}
+      <div><span>月相</span><b>{mname}</b><span>亮面 {millum}%{'，月出 ' + mrise if mrise != '—' else ''}</span></div>
     </div>
     <p>今天{t['tide']}：{t['note']}。</p>
 
 <h2>未来 7 天</h2>
 <table class="week">
-<tr><th>日期</th><th>农历</th><th>日出</th><th>日落</th><th>潮汛</th></tr>
+<tr><th>日期</th><th>农历</th><th>日出</th><th>日落</th>{'<th>天气</th>' if wx else ''}<th>潮汛</th></tr>
 {rows}
 </table>
 <p>{big_txt}</p>
 
 <h2>怎么用这张表</h2>
 <ul>
-  <li><strong>看日出：</strong><a href="bishu.html">白云山观日台</a>是福州一带看日出的好地方，从度假村开车约 20 分钟，天没亮也能开到观日台附近。</li>
+  <li><strong>看日出：</strong>度假村门口的沙滩就能看海上日出，出门走几步，很壮观。想登高看，<a href="bishu.html">白云山观日台</a>也是福州一带看日出的好地方，从度假村开车约 20 分钟，天没亮也能开到观日台附近。</li>
   <li><strong>看日落：</strong>日落前半小时到门口沙滩或山顶，<a href="sunset.html">看日落的几个地方</a>。</li>
   <li><strong>赶海：</strong>大潮日退得最远。具体几点退潮，出发前在天气 App 搜「琅岐 潮汐」，退潮前后两小时最合适。<a href="ganhai.html">赶海攻略</a></li>
   <li><strong>安全：</strong>涨潮很快，看到水开始往回漫就上岸；礁石滑，穿防滑鞋。</li>
 </ul>
-<p style="font-size:14px;opacity:.7">日出日落按龙鼓度假村坐标计算，误差一两分钟。潮汛按农历推算，只表示潮水大小，不是精确潮时，以潮汐表为准。</p>
+<p style="font-size:14px;opacity:.7">日出日落、月相按龙鼓度假村坐标计算，误差一两分钟。天气来自 Open-Meteo 预报，出发前再看一眼手机天气。潮汛按农历推算，只表示潮水大小，不是精确潮时，以潮汐表为准。</p>
 
 <aside class="stay">
   <h2>住在有福海墅</h2>

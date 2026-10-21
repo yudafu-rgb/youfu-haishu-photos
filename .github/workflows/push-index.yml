@@ -1,0 +1,33 @@
+# main 上有页面改动时，把改动的页面推给百度和 IndexNow（必应等）。百度 token 在仓库 Secrets 的 BAIDU_TOKEN。
+name: push-index
+on:
+  push:
+    branches: [main]
+    paths: ['docs/**.html']
+  workflow_dispatch:
+    inputs:
+      files:
+        description: '要推的文件，空格分隔，例如 docs/guide/chunjie.html docs/index.html'
+        required: true
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout: |
+            docs
+            工具
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - env:
+          BAIDU_TOKEN: ${{ secrets.BAIDU_TOKEN }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python3 工具/push_index.py ${{ github.event.inputs.files }}
+          else
+            python3 工具/push_index.py --changed ${{ github.event.before }} ${{ github.sha }}
+          fi

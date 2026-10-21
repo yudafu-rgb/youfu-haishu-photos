@@ -1,4 +1,5 @@
-# 每天北京时间 00:10 重新生成 docs/guide/today.html（日出日落 + 潮汛），有变化就提交。
+# 每天北京时间 00:10 重新生成 docs/guide/today.html（日出日落、天气、月相、潮汛），有变化就提交并推给百度和 IndexNow。
+# 这里自己的提交不会触发 push-index.yml（GITHUB_TOKEN 的推送不触发其他工作流），所以推送也在这里做。
 name: daily-today
 on:
   schedule:
@@ -11,13 +12,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            docs
+            工具
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install lunardate==0.3.0
+      - run: pip install lunardate==0.3.0 ephem==4.1.6
       - run: python3 工具/build_today.py
-      - run: |
+      - id: commit
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898732+github-actions[bot]@users.noreply.github.com"
           git add docs/guide/today.html docs/sitemap.xml
-          git diff --cached --quiet || (git commit -m "Daily update: today.html" && git push)
+          if git diff --cached --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; else
+            git commit -m "Daily update: today.html" && git push && echo "changed=true" >> "$GITHUB_OUTPUT"; fi
+      - if: steps.commit.outputs.changed == 'true'
+        env:
+          BAIDU_TOKEN: ${{ secrets.BAIDU_TOKEN }}
+        run: python3 工具/push_index.py docs/guide/today.html
