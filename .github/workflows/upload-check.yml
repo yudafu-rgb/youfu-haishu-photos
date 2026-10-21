@@ -1,0 +1,35 @@
+# 每次推送后检查新传的照片、视频：带不带拍摄位置（GPS）、手机型号，文件是不是太大。有问题开 Issue 提醒（GitHub 会发邮件）。
+name: upload-check
+on:
+  push:
+    branches: [main]
+    paths: ['**.jpg', '**.jpeg', '**.JPG', '**.png', '**.heic', '**.webp', '**.mp4', '**.mov', '**.MOV', '**.m4v']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout: 工具
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install Pillow
+      - id: check
+        run: |
+          set +e
+          python3 工具/check_uploads.py ${{ github.event.before }} ${{ github.sha }} > result.txt; code=$?
+          cat result.txt
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+      - if: steps.check.outputs.code != '0'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          { echo "$(TZ=Asia/Shanghai date '+%m-%d %H:%M') 上传的素材："; echo; cat result.txt; echo;
+            echo "公开仓库里的文件谁都能下载。带位置的，建议在电脑上去掉位置信息后重新上传，再删掉旧文件。处理完关掉这条就行。"; } > body.md
+          python3 工具/issue.py open "上传的素材需要处理" body.md

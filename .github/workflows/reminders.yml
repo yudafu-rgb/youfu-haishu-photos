@@ -1,0 +1,23 @@
+# 每天北京时间 8:50 看有没有该提醒房东的事（每周该发哪篇、每月采摘、春节换标题、查灯会地点），有就开 Issue，GitHub 会发邮件。
+name: reminders
+on:
+  schedule:
+    - cron: '50 0 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: 工具
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install lunardate==0.3.0 ephem==4.1.6
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 工具/reminders.py

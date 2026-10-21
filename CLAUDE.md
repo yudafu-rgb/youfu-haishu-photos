@@ -25,8 +25,13 @@
 | --- | --- | --- |
 | `daily-today.yml` | 北京时间 0:10、6:10、12:10、18:10 | 运行 `工具/build_today.py`，生成 `docs/guide/today.html`（日出日落、天气、月相、潮汛、台风）、`docs/guide/caizhai.html`（采摘日历）、`docs/daily.js`（首页大图轮换、近期提示），更新 sitemap；只有 0:10 那次推百度 |
 | `push-index.yml` | main 上 `docs/**.html` 有改动 | `工具/push_index.py` 把改动页面推百度（每次最多 5 条）和 IndexNow |
-| `site-check.yml` | 每周一 9:00、每次改 docs | `工具/check_site.py`：死链、图片超 800KB、漏统计代码、sitemap 漏页 |
+| `site-check.yml` | 每周一 9:00、每次改 docs | `工具/check_site.py`：死链、图片超 800KB、漏统计代码、sitemap 漏页、价格和 `price.html` 对不上、优惠过期还挂着；有问题开 Issue |
+| `uptime.yml` | 每小时 | 官网打不开、HTTPS 证书 14 天内到期、域名 30 天内到期（现在到 2027-10-15）就开 Issue「官网告警」，恢复自动关 |
+| `reminders.yml` | 每天 8:50 | `工具/reminders.py`：周一提醒内容日历本周那篇、每月 1 号提醒当月采摘、除夕前 21 天换平台春节标题、除夕前 10 天查灯会地点、农历二月初一换回标题 |
+| `upload-check.yml` | 推了照片、视频 | `工具/check_uploads.py`：带 GPS / 手机型号、超过 50MB 就开 Issue |
 
+- 提醒都走 GitHub Issue（标签「自动提醒」，`工具/issue.py`），GitHub 会发邮件给房东。
+- 价格只改 `docs/price.html`，其他页面的价格要和它一致，不然体检会报。
 - 百度 token 在仓库 Secrets 的 `BAIDU_TOKEN`；百度每天配额约 10 条，别浪费。
 - `docs/8cf8b6e8940616fad9620bc4f4c5677a.txt` 是 IndexNow 的 key 文件，**别删**。
 - 外部数据：Open-Meteo（天气、海洋模型）、日本气象厅（台风路径），都免费无 key，拿不到就跳过那一块，页面照常生成。

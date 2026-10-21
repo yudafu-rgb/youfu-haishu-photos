@@ -176,10 +176,7 @@ def moon_notes(today):
 
 
 def lunar_to_solar(y, m, d):
-    try:
-        return LunarDate(y, m, d).to_solar_date()
-    except ValueError:  # 腊月没有三十的年份
-        return LunarDate(y, m, d - 1).to_solar_date() + dt.timedelta(days=1)
+    return LunarDate(y, m, d).to_solar_date()
 
 
 def md(d):
@@ -238,7 +235,7 @@ def notices(today):
     out += [typhoon_text(t) for t in TYPHOONS]
     ly = LunarDate.from_solar_date(today.year, today.month, today.day).year
     for y in (ly, ly + 1):
-        eve = lunar_to_solar(y - 1, 12, 30)          # 除夕
+        eve = lunar_to_solar(y, 1, 1) - dt.timedelta(days=1)  # 除夕（腊月可能只有 29 天，不能直接写腊月三十）
         d10, d15, d26 = (lunar_to_solar(y, 1, k) for k in (10, 15, 26))
         if 0 <= (eve - today).days <= 45 or eve <= today <= d15:
             out.append(f'<b>春节</b>（除夕 {md(eve)} 至正月十五 {md(d15)}）房间最紧，建议提早订。<a href="/price.html">看房价</a>')

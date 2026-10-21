@@ -1,0 +1,47 @@
+# 每小时检查官网能不能打开、HTTPS 证书和域名快不快到期。出问题自动开 Issue（GitHub 会发邮件），恢复了自动关掉。
+name: uptime
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+permissions:
+  issues: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: 工具
+      - id: site
+        run: |
+          problems=""
+          code=$(curl -sS -o page.html -w '%{http_code}' --max-time 30 https://youfuhaishu.com/ || echo 000)
+          if [ "$code" != "200" ] || ! grep -q '有福海墅' page.html; then
+            sleep 60  # 偶尔抖一下不算，过一分钟再试一次
+            code=$(curl -sS -o page.html -w '%{http_code}' --max-time 30 https://youfuhaishu.com/ || echo 000)
+            if [ "$code" != "200" ] || ! grep -q '有福海墅' page.html; then problems="$problems- 官网打不开（返回 $code）\n"; fi
+          fi
+          end=$(echo | openssl s_client -servername youfuhaishu.com -connect youfuhaishu.com:443 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
+          if [ -n "$end" ]; then
+            days=$(( ( $(date -d "$end" +%s) - $(date +%s) ) / 86400 ))
+            [ "$days" -lt 14 ] && problems="$problems- HTTPS 证书还剩 $days 天到期（GitHub Pages 一般会自动续，没续的话到仓库 Settings → Pages 检查）\n"
+          fi
+          if [ "$(date -u +%H)" = "01" ]; then  # 域名到期每天查一次就够
+            exp=$(curl -sS --max-time 30 https://rdap.verisign.com/com/v1/domain/youfuhaishu.com | python3 -c "import json,sys;print([e['eventDate'] for e in json.load(sys.stdin)['events'] if e['eventAction']=='expiration'][0])" || true)
+            if [ -n "$exp" ]; then
+              days=$(( ( $(date -d "$exp" +%s) - $(date +%s) ) / 86400 ))
+              [ "$days" -lt 30 ] && problems="$problems- 域名 youfuhaishu.com 还剩 $days 天到期，记得到域名注册商续费\n"
+            fi
+          fi
+          printf "$problems" > problems.txt
+          cat problems.txt
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -s problems.txt ]; then
+            { echo "自动检查（$(TZ=Asia/Shanghai date '+%m-%d %H:%M')）发现："; echo; cat problems.txt; } > body.md
+            python3 工具/issue.py open "官网告警" body.md
+          else
+            python3 工具/issue.py close "官网告警" "已恢复正常（$(TZ=Asia/Shanghai date '+%m-%d %H:%M')）。"
+          fi
