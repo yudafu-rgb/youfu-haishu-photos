@@ -126,6 +126,25 @@ def moon(d):
     return name, illum, rise
 
 
+MOON_ICON = {'新月': '🌑', '娥眉月': '🌒', '盈凸月': '🌔', '满月': '🌕', '亏凸月': '🌖', '残月': '🌘'}
+
+
+def moon_notes(today):
+    """下一个满月（含月出）和临近的中秋，给页面上的「赏月」一段用。"""
+    start = dt.datetime(today.year, today.month, today.day) - dt.timedelta(hours=TZ)
+    full = (ephem.next_full_moon(start).datetime() + dt.timedelta(hours=TZ)).date()
+    rise = moon(full)[2]
+    out = [f"下一个满月在 {full.month} 月 {full.day} 日（周{WEEK[full.weekday()]}）"
+           + (f"，月出 {rise}" if rise != '—' else '') + "。满月前后两三天，太阳下山后不久月亮就从海上升起，到门口沙滩看最好，海面上会有一条月光。"]
+    ly = LunarDate.from_solar_date(today.year, today.month, today.day).year
+    for y in (ly, ly + 1):
+        mid = LunarDate(y, 8, 15).to_solar_date()
+        if 0 <= (mid - today).days <= 90:
+            out.append(f"今年中秋是 {mid.month} 月 {mid.day} 日（周{WEEK[mid.weekday()]}），想一家人在海边别墅过中秋赏月，建议提早订。")
+            break
+    return out
+
+
 def day_info(d):
     ld = LunarDate.from_solar_date(d.year, d.month, d.day)
     rise, sset = sun_times(d)
@@ -143,6 +162,9 @@ def build(today):
         x['tides'] = td.get(x['d'].isoformat(), [])
         print(x['d'], '潮时（模型估算）', ' '.join(k + v for k, v in x['tides']))
     mname, millum, mrise = moon(today)
+    for x in days:
+        x['micon'] = MOON_ICON[moon(x['d'])[0]]
+    mnotes = moon_notes(today)
     w0 = days[0]['wx']
     t = days[0]
     big = [x for x in days if x['tide'] == '大潮']
@@ -176,7 +198,7 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
 </head>''')
 
     rows = '\n'.join(
-        f"<tr><td>{x['d'].month}/{x['d'].day} 周{WEEK[x['d'].weekday()]}</td><td>{x['lunar']}</td>"
+        f"<tr><td>{x['d'].month}/{x['d'].day} 周{WEEK[x['d'].weekday()]}</td><td>{x['lunar']} {x['micon']}</td>"
         f"<td>{x['rise']}</td><td>{x['sset']}</td>"
         + (f"<td>{x['wx']['sky']} {x['wx']['lo']}–{x['wx']['hi']}℃" + (f"<br><span class=\"warn\">降雨 {x['wx']['rain']}%</span>" if (x['wx']['rain'] or 0) >= 50 else '') + "</td>" if x['wx'] else ('<td>—</td>' if wx else ''))
         + f"<td><span class=\"tag {x['cls']}\">{x['tide']}</span>"
@@ -204,6 +226,9 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
 {rows}
 </table>
 <p>{big_txt}</p>
+
+<h2>赏月</h2>
+{''.join(f"<p>{n}</p>" for n in mnotes)}
 
 <h2>怎么用这张表</h2>
 <ul>
