@@ -23,7 +23,7 @@
 
 | 工作流 | 什么时候跑 | 做什么 |
 | --- | --- | --- |
-| `daily-today.yml` | 北京时间 0:10、6:10、12:10、18:10 | 运行 `工具/build_today.py`，生成 `docs/guide/today.html`（日出日落、天气、月相、潮汛、台风）、`docs/guide/caizhai.html`（采摘日历）、`docs/daily.js`（首页大图轮换、近期提示），更新 sitemap；只有 0:10 那次推百度 |
+| `daily-today.yml` | 北京时间 0:10、6:10、12:10、18:10 | 运行 `工具/build_today.py`，生成 `docs/guide/today.html`（日出日落、天气、月相、潮汛、台风）、`docs/guide/caizhai.html`（采摘日历）、`docs/daily.js`（首页大图轮换、近期提示），用 `工具/sitemap_lastmod.py` 把 sitemap 每页日期改成最后提交日期；只有 0:10 那次推百度 |
 | `push-index.yml` | main 上 `docs/**.html` 有改动 | `工具/push_index.py` 把改动页面推百度（每次最多 5 条）和 IndexNow |
 | `site-check.yml` | 每周一 9:00、每次改 docs | `工具/check_site.py`：死链、图片超 800KB、漏统计代码、sitemap 漏页、价格和 `price.html` 对不上、优惠过期还挂着；有问题开 Issue |
 | `uptime.yml` | 每小时 | 官网打不开、HTTPS 证书 14 天内到期、域名 30 天内到期（现在到 2027-10-15）就开 Issue「官网告警」，恢复自动关 |

@@ -14,6 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          fetch-depth: 0       # sitemap_lastmod.py 要看每个页面最后一次提交的日期
+          filter: blob:none    # 只拿历史记录，不下载旧版照片视频
           sparse-checkout: |
             docs
             工具
@@ -22,6 +24,7 @@ jobs:
           python-version: '3.12'
       - run: pip install lunardate==0.3.0 ephem==4.1.6
       - run: python3 工具/build_today.py
+      - run: python3 工具/sitemap_lastmod.py
       - id: commit
         run: |
           git config user.name "github-actions[bot]"
