@@ -88,11 +88,11 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
 
     rows = '\n'.join(
         f"<tr><td>{x['d'].month}/{x['d'].day} 周{WEEK[x['d'].weekday()]}</td><td>{x['lunar']}</td>"
-        f"<td>{x['sset']}</td><td><span class=\"tag {x['cls']}\">{x['tide']}</span></td></tr>" for x in days)
+        f"<td>{x['rise']}</td><td>{x['sset']}</td><td><span class=\"tag {x['cls']}\">{x['tide']}</span></td></tr>" for x in days)
     body = f'''<main class="article">
   <div class="wrap narrow">
     <p class="crumb"><a href="../">首页</a> / <a href="./">游玩攻略</a></p>
-    <h1>琅岐今日日落和赶海潮汛</h1>
+    <h1>琅岐今日日出日落和赶海潮汛</h1>
     <p>{datestr}，星期{WEEK[today.weekday()]}，农历{t['lunar']}。本页每天自动更新，住在龙鼓度假村的客人可以照着安排看日落、赶海。</p>
 
     <div class="today">
@@ -105,13 +105,14 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
 
 <h2>未来 7 天</h2>
 <table class="week">
-<tr><th>日期</th><th>农历</th><th>日落</th><th>潮汛</th></tr>
+<tr><th>日期</th><th>农历</th><th>日出</th><th>日落</th><th>潮汛</th></tr>
 {rows}
 </table>
 <p>{big_txt}</p>
 
 <h2>怎么用这张表</h2>
 <ul>
+  <li><strong>看日出：</strong><a href="bishu.html">白云山观日台</a>是福州一带看日出的好地方，从度假村开车约 20 分钟，天没亮也能开到观日台附近。</li>
   <li><strong>看日落：</strong>日落前半小时到门口沙滩或山顶，<a href="sunset.html">看日落的几个地方</a>。</li>
   <li><strong>赶海：</strong>大潮日退得最远。具体几点退潮，出发前在天气 App 搜「琅岐 潮汐」，退潮前后两小时最合适。<a href="ganhai.html">赶海攻略</a></li>
   <li><strong>安全：</strong>涨潮很快，看到水开始往回漫就上岸；礁石滑，穿防滑鞋。</li>
