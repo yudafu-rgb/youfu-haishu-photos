@@ -35,6 +35,7 @@ main.book h1{font-size:26px;margin:0 0 6px}
 main.book .sub{color:#555;margin:0 0 24px;line-height:1.7}
 .f-group{margin-bottom:20px}
 .f-group label{display:block;font-weight:700;margin-bottom:8px}
+.f-group .flabel{display:block;font-weight:700;margin-bottom:8px}
 .f-group input,.f-group select{width:100%;padding:11px 12px;font-size:16px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}
 .f-row{display:flex;gap:12px}
 .f-row .f-group{flex:1}
@@ -72,6 +73,7 @@ var _hmt = _hmt || [];
 </script>
 </head>
 <body>
+<a class="skip" href="#main">跳到正文</a>
 <header class="bar solid">
   <a class="brand" href="./" aria-label="有福海墅 首页"><img src="img/logo.png" alt="有福海墅">有福海墅</a>
   <nav aria-label="页面导航">
@@ -85,16 +87,16 @@ var _hmt = _hmt || [];
     <a href="booking.html" aria-current="page">预订</a>
   </nav>
 </header>
-<main class="book">
+<main class="book" id="main">
 <h1>在线预订</h1>
 <p class="sub">选房型、选日期，价格实时算出，提交预订申请后，我们会电话确认房态与价格，确认后即为您保留房间。直接渠道（官网+小程序）共用一个库存，不超卖。</p>
 
 <div class="f-group">
-<label>房型</label>
-<div class="room-opt" id="roomOpts">
-<button type="button" data-room="twin" class="sel">单间 · 海景双床房</button>
-<button type="button" data-room="king">单间 · 海景大床房</button>
-<button type="button" data-room="villa">整栋包栋</button>
+<div class="flabel" id="room-label">房型</div>
+<div class="room-opt" id="roomOpts" role="group" aria-labelledby="room-label">
+<button type="button" data-room="twin" class="sel" aria-pressed="true">单间 · 海景双床房</button>
+<button type="button" data-room="king" aria-pressed="false">单间 · 海景大床房</button>
+<button type="button" data-room="villa" aria-pressed="false">整栋包栋</button>
 </div>
 </div>
 
@@ -160,14 +162,13 @@ var _hmt = _hmt || [];
     <p>扫码问空房<br><a href="tel:13705088479">137 0508 8479</a></p>
   </div>
 </details>
-<!-- 手机端底部固定咨询条：咨询空房 / 加微信 / 团建包栋 / 导航到店 -->
+<!-- 手机端底部固定咨询条：咨询空房 / 在线预订 / 团建包栋 -->
 <div class="m-cta-bar" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:900;background:rgba(29,42,51,.97);border-top:1px solid rgba(255,255,255,.12);">
-<a href="tel:13705088479" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0 9px;color:#fff;text-decoration:none;font-size:13px;font-weight:700;line-height:1.2;border-right:1px solid rgba(255,255,255,.12);background:#ffd34d;color:#1d2a33;"><span style="font-size:18px">&#128222;</span>咨询空房</a>
-<a href="/#book" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0 9px;color:#fff;text-decoration:none;font-size:13px;font-weight:700;line-height:1.2;border-right:1px solid rgba(255,255,255,.12);"><span style="font-size:18px">&#128172;</span>加微信</a>
+<a href="tel:13705088479" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0 9px;text-decoration:none;font-size:13px;font-weight:700;line-height:1.2;border-right:1px solid rgba(255,255,255,.12);background:var(--cta);color:#1d2a33;"><span style="font-size:18px">&#128222;</span>咨询空房</a>
+<a href="/#book" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0 9px;color:#fff;text-decoration:none;font-size:13px;font-weight:700;line-height:1.2;border-right:1px solid rgba(255,255,255,.12);"><span style="font-size:18px">&#128172;</span>在线预订</a>
 <a href="/tuanjian.html" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0 9px;color:#fff;text-decoration:none;font-size:13px;font-weight:700;line-height:1.2;border-right:1px solid rgba(255,255,255,.12);"><span style="font-size:18px">&#128101;</span>团建包栋</a>
 <a href="https://uri.amap.com/marker?position=119.642365,26.059977&amp;name=%E6%9C%89%E7%A6%8F%E6%B5%B7%E5%A2%85&amp;coordinate=gaode&amp;callnative=1" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0 9px;color:#fff;text-decoration:none;font-size:13px;font-weight:700;line-height:1.2;border-right:1px solid rgba(255,255,255,.12);border-right:0;"><span style="font-size:18px">&#128205;</span>导航到店</a>
 </div>
-<style>@media(max-width:768px){.m-cta-bar{display:flex!important}.wx-float{display:none!important}body{padding-bottom:58px}}</style>
 
 <script>
 // 价格表（与 PMS 口径一致；如调价只改这里，后端以云端为准）
@@ -187,8 +188,9 @@ var $ = function(id){ return document.getElementById(id); };
 
 document.querySelectorAll("#roomOpts button").forEach(function(b){
   b.addEventListener("click", function(){
-    document.querySelectorAll("#roomOpts button").forEach(function(x){ x.classList.remove("sel"); });
+    document.querySelectorAll("#roomOpts button").forEach(function(x){ x.classList.remove("sel"); x.setAttribute("aria-pressed", "false"); });
     b.classList.add("sel");
+    b.setAttribute("aria-pressed", "true");
     room = b.getAttribute("data-room");
     calc();
   });
