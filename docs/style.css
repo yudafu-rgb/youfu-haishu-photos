@@ -7,6 +7,7 @@
   --pink:#e9b7c2;
   --yellow:#eecb6b;
   --paper:#ffffff;
+  --wx:#047a35;
   --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",Georgia,serif;
   --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,-apple-system,"Segoe UI",sans-serif;
   --wrap:1120px;
@@ -31,7 +32,7 @@ p{margin:0 0 1em}
 .bar nav{display:flex;gap:18px}
 .bar nav a{color:#fff;text-decoration:none;font-size:15px;text-shadow:0 1px 6px rgba(0,0,0,.4)}
 .bar nav a.lang{border:1px solid rgba(255,255,255,.7);padding:1px 10px;border-radius:999px}
-@media (max-width:640px){.bar nav a:not(.lang){display:none}}
+@media (max-width:640px){.bar nav{min-width:0;display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding:4px 0}.bar nav::-webkit-scrollbar{display:none}.bar nav a{flex:none}}
 
 /* hero */
 .hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:#335 var(--hero,url(img/hero.jpg)) center/cover no-repeat}
@@ -229,14 +230,14 @@ footer a{color:var(--ink-soft)}
 
 /* 微信悬浮咨询按钮（2026-10-17 Muse 加，只追加未改动原有样式） */
 .wx-float{position:fixed;right:14px;bottom:14px;z-index:99;margin:0}
-.wx-float summary{list-style:none;cursor:pointer;width:58px;height:58px;border-radius:50%;background:#07c160;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;line-height:1.35;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.28);-webkit-tap-highlight-color:transparent}
+.wx-float summary{list-style:none;cursor:pointer;width:58px;height:58px;border-radius:50%;background:var(--wx);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;line-height:1.35;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.28);-webkit-tap-highlight-color:transparent}
 .wx-float summary::-webkit-details-marker{display:none}
 .wx-float summary::marker{content:""}
-.wx-float[open] summary{background:#05944a}
+.wx-float[open] summary{background:var(--wx)}
 .wx-float-pop{position:absolute;right:0;bottom:68px;width:176px;background:#fff;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.24);padding:12px 12px 10px;text-align:center}
 .wx-float-pop img{width:140px;height:140px;border-radius:6px}
 .wx-float-pop p{margin:8px 0 2px;font-size:13px;color:#333;line-height:1.6}
-.wx-float-pop a{color:#07c160;font-weight:700;text-decoration:none}
+.wx-float-pop a{color:var(--wx);font-weight:700;text-decoration:none}
 
 .article img.wxqr-inline{display:block;width:180px;height:180px;max-width:180px;padding:8px;background:#fff;border:1px solid #d6e3ea;border-radius:8px;margin:8px 0 16px}
 
