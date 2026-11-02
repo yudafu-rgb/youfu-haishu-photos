@@ -8,6 +8,7 @@
   --yellow:#eecb6b;
   --paper:#ffffff;
   --wx:#047a35;
+  --cta:#ffd34d;
   --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",Georgia,serif;
   --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,-apple-system,"Segoe UI",sans-serif;
   --wrap:1120px;
@@ -30,8 +31,8 @@ p{margin:0 0 1em}
 .bar .brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-family:var(--serif);font-size:19px;letter-spacing:.12em;text-shadow:0 1px 8px rgba(0,0,0,.35)}
 .bar .brand img{width:44px;height:auto;background:#fff;border-radius:50%;padding:5px}
 .bar nav{display:flex;gap:18px}
-.bar nav a{color:#fff;text-decoration:none;font-size:15px;text-shadow:0 1px 6px rgba(0,0,0,.4)}
-.bar nav a.lang{border:1px solid rgba(255,255,255,.7);padding:1px 10px;border-radius:999px}
+.bar nav a{color:#fff;text-decoration:none;font-size:15px;text-shadow:0 1px 6px rgba(0,0,0,.4);padding:10px 0}
+.bar nav a.lang{border:1px solid rgba(255,255,255,.7);padding:10px 10px;border-radius:999px}
 @media (max-width:640px){.bar nav{min-width:0;display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding:4px 0}.bar nav::-webkit-scrollbar{display:none}.bar nav a{flex:none}}
 
 /* hero */
@@ -54,7 +55,7 @@ p{margin:0 0 1em}
   .hero .inner{flex-direction:column;align-items:flex-start;padding-bottom:64px}
   .vert{margin-top:90px;font-size:56px}
 }
-.hero .vp{display:inline-block;background:rgba(255,211,77,.95);color:#1d2a33!important;text-shadow:none;padding:6px 12px;border-radius:8px;font-size:15px!important}
+.hero .vp{display:inline-block;background:var(--cta);color:#1d2a33!important;text-shadow:none;padding:6px 12px;border-radius:8px;font-size:15px!important}
 
 /* villa colour strip — the three villas */
 .strip{display:grid;grid-template-columns:1fr 1fr 1fr;height:10px}
@@ -113,7 +114,7 @@ td{padding:10px 0;border-bottom:1px solid #d6e3ea}
 td:last-child{text-align:right;color:var(--ink-soft)}
 .maps{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
 .maps a{border:1px solid var(--tide);border-radius:999px;padding:5px 14px;text-decoration:none;font-size:15px}
-.maps .copy-addr{border:1px solid var(--tide);border-radius:999px;padding:5px 14px;font-size:15px;background:none;color:inherit;font-family:inherit;cursor:pointer}
+.maps .copy-addr{border:1px solid var(--tide);border-radius:999px;padding:10px 14px;font-size:15px;background:none;color:inherit;font-family:inherit;cursor:pointer}
 @media (max-width:820px){.trip{grid-template-columns:1fr;gap:36px}}
 
 /* rules */
@@ -206,8 +207,8 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 @media (max-width:820px){.group-card{grid-template-columns:1fr;padding:22px}.group-card img{order:-1}}
 .article h3{font-size:19px;margin:22px 0 6px}
 .article figcaption{font-size:14px;color:var(--ink-soft);margin-top:6px}
-.article .credit{display:block;font-size:12px;color:#7a8a94;margin-top:2px}
-.article .credit a{color:#7a8a94}
+.article .credit{display:block;font-size:12px;color:var(--ink-soft);margin-top:2px}
+.article .credit a{color:var(--ink-soft)}
 .tbl{overflow-x:auto;margin:14px 0 18px}
 table.plan{min-width:420px;font-size:15px}
 table.plan td:first-child,table.plan th:first-child{white-space:nowrap}
@@ -283,3 +284,10 @@ footer a{color:var(--ink-soft)}
 .price-hint.in-card{margin:16px 0 18px;background:var(--mist);border-color:var(--mist);border-left-color:var(--yellow)}
 .price-hint.in-card em{background:#fff}
 @media (max-width:760px){.price-hint{gap:8px 18px;padding:14px 16px}.price-hint .ph-link{margin-left:0}}
+
+/* 跳到正文链接（键盘用户，平时隐藏，聚焦时出现） */
+.skip{position:absolute;left:8px;top:-100px;z-index:1000;background:var(--ink);color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none}
+.skip:focus{top:8px}
+
+/* 手机端底部咨询条（原各页内联 <style>，现收归此处） */
+@media(max-width:768px){.m-cta-bar{display:flex!important}.wx-float{display:none!important}body{padding-bottom:58px}}
