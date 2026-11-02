@@ -6,7 +6,29 @@
 <title>在线预订｜有福海墅</title>
 <meta name="description" content="有福海墅在线预订：选房型、选日期、算价格，提交预订申请后，我们会电话确认房态与价格，确认后即为您保留房间。门口就是沙滩，福州琅岐岛龙鼓度假村海边别墅。">
 <link rel="canonical" href="https://youfuhaishu.com/booking.html">
-<link rel="stylesheet" href="/style.css?v=20261018b">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta property="og:title" content="在线预订｜有福海墅">
+<meta property="og:description" content="有福海墅在线预订：选房型、选日期、算价格，提交预订申请后，我们会电话确认房态与价格，确认后即为您保留房间。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://youfuhaishu.com/booking.html">
+<meta property="og:image" content="https://youfuhaishu.com/img/hero.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "有福海墅·在线预订",
+  "description": "选房型、选日期、算价格，提交预订申请后电话确认房态与价格。",
+  "url": "https://youfuhaishu.com/booking.html",
+  "about": {
+    "@type": "Hotel",
+    "name": "有福海墅",
+    "url": "https://youfuhaishu.com/"
+  }
+}
+</script>
+<link rel="stylesheet" href="style.css?v=20261021">
 <style>
 main.book{max-width:720px;margin:0 auto;padding:24px 20px 96px}
 main.book h1{font-size:26px;margin:0 0 6px}
@@ -22,7 +44,7 @@ main.book .sub{color:#555;margin:0 0 24px;line-height:1.7}
 .price-box{border:1px solid #ddd;border-radius:10px;padding:16px 18px;margin:24px 0;background:#fafafa}
 .price-box .line{display:flex;justify-content:space-between;padding:4px 0;color:#333}
 .price-box .total{border-top:1px solid #ddd;margin-top:8px;padding-top:10px;font-weight:700;font-size:18px}
-.price-box .note{color:#888;font-size:13px;margin-top:8px;line-height:1.6}
+.price-box .note{color:var(--ink-soft);font-size:13px;margin-top:8px;line-height:1.6}
 .btn-book{display:block;width:100%;padding:14px;font-size:17px;background:#1d2a33;color:#fff;border:0;border-radius:10px;cursor:pointer}
 .btn-book:disabled{background:#999;cursor:not-allowed}
 .msg{margin-top:14px;padding:12px 14px;border-radius:8px;display:none;line-height:1.7}
@@ -50,6 +72,19 @@ var _hmt = _hmt || [];
 </script>
 </head>
 <body>
+<header class="bar solid">
+  <a class="brand" href="./" aria-label="有福海墅 首页"><img src="img/logo.png" alt="有福海墅">有福海墅</a>
+  <nav aria-label="页面导航">
+    <a href="./#rooms">房型</a>
+    <a href="juhuage.html">菊花阁</a>
+    <a href="honghuage.html">红花阁</a>
+    <a href="meiguige.html">玫瑰阁</a>
+    <a href="shipin.html">视频</a>
+    <a href="jianshen.html">健身</a>
+    <a href="price.html">房价</a>
+    <a href="booking.html" aria-current="page">预订</a>
+  </nav>
+</header>
 <main class="book">
 <h1>在线预订</h1>
 <p class="sub">选房型、选日期，价格实时算出，提交预订申请后，我们会电话确认房态与价格，确认后即为您保留房间。直接渠道（官网+小程序）共用一个库存，不超卖。</p>
@@ -108,10 +143,31 @@ var _hmt = _hmt || [];
 </div>
 
 <button class="btn-book" id="bookBtn" type="button">提交预订申请</button>
-<div class="msg" id="msg"></div>
+<div class="msg" id="msg" role="alert"></div>
 
 <p class="back"><a href="/">← 回首页</a> · <a href="/price.html">价格说明</a> · 订房咨询 <a href="tel:13705088479">13705088479</a></p>
 </main>
+<footer>
+  <div class="wrap">
+    <span>有福海墅 · 福州开发区金鸡度假有限公司</span>
+    <span>福建省福州市马尾区琅岐镇龙鼓度假村101号</span>
+  </div>
+</footer>
+<details class="wx-float">
+  <summary aria-label="微信咨询预订"><span>微信<br>咨询</span></summary>
+  <div class="wx-float-pop">
+    <img src="img/wechat-qr.png" width="140" height="140" alt="有福海墅接待微信二维码" loading="lazy">
+    <p>扫码问空房<br><a href="tel:13705088479">137 0508 8479</a></p>
+  </div>
+</details>
+<!-- 手机端底部固定咨询条：咨询空房 / 加微信 / 团建包栋 / 导航到店 -->
+<div class="m-cta-bar" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:900;background:rgba(29,42,51,.97);border-top:1px solid rgba(255,255,255,.12);">
+<a href="tel:13705088479" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0 9px;color:#fff;text-decoration:none;font-size:13px;font-weight:700;line-height:1.2;border-right:1px solid rgba(255,255,255,.12);background:#ffd34d;color:#1d2a33;"><span style="font-size:18px">&#128222;</span>咨询空房</a>
+<a href="/#book" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0 9px;color:#fff;text-decoration:none;font-size:13px;font-weight:700;line-height:1.2;border-right:1px solid rgba(255,255,255,.12);"><span style="font-size:18px">&#128172;</span>加微信</a>
+<a href="/tuanjian.html" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0 9px;color:#fff;text-decoration:none;font-size:13px;font-weight:700;line-height:1.2;border-right:1px solid rgba(255,255,255,.12);"><span style="font-size:18px">&#128101;</span>团建包栋</a>
+<a href="https://uri.amap.com/marker?position=119.642365,26.059977&amp;name=%E6%9C%89%E7%A6%8F%E6%B5%B7%E5%A2%85&amp;coordinate=gaode&amp;callnative=1" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0 9px;color:#fff;text-decoration:none;font-size:13px;font-weight:700;line-height:1.2;border-right:1px solid rgba(255,255,255,.12);border-right:0;"><span style="font-size:18px">&#128205;</span>导航到店</a>
+</div>
+<style>@media(max-width:768px){.m-cta-bar{display:flex!important}.wx-float{display:none!important}body{padding-bottom:58px}}</style>
 
 <script>
 // 价格表（与 PMS 口径一致；如调价只改这里，后端以云端为准）
