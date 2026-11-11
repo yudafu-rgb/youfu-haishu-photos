@@ -311,6 +311,17 @@ def beach_windows(day):
     return out
 
 
+def _breadcrumb_ld(name, url):
+    """BreadcrumbList JSON-LD：首页 / 游玩攻略 / 本页（today.html、caizhai.html 由每日任务生成）。"""
+    items = [
+        {"@type": "ListItem", "position": 1, "name": "首页", "item": "https://youfuhaishu.com/"},
+        {"@type": "ListItem", "position": 2, "name": "游玩攻略", "item": "https://youfuhaishu.com/guide/"},
+        {"@type": "ListItem", "position": 3, "name": name, "item": url},
+    ]
+    data = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items}
+    return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>\n'
+
+
 def page_shell(title, desc, url, og_title, og_img):
     """用 bishu.html 的页头页脚包一页（统计代码、悬浮微信、底部咨询条跟着走）。"""
     src = open(os.path.join(DOCS, 'guide', 'bishu.html'), encoding='utf-8').read()
@@ -322,6 +333,9 @@ def page_shell(title, desc, url, og_title, og_img):
     head = re.sub(r'(<meta property="og:description" content=")[^"]*', r'\g<1>' + desc, head)
     head = head.replace('https://youfuhaishu.com/guide/bishu.html', url).replace('img/beach.jpg', og_img)
     head = re.sub(r'<script type="application/ld\+json">.*?</script>\n', '', head, flags=re.S)
+    _crumb = {'caizhai.html': '琅岐采摘日历'}.get(url.rsplit('/', 1)[-1])
+    if _crumb:
+        head = head.replace('</head>', _breadcrumb_ld(_crumb, url) + '</head>', 1)
     return head, tail
 
 
@@ -433,6 +447,7 @@ def build(today):
     head = re.sub(r'(<meta property="og:description" content=")[^"]*', r'\g<1>' + desc, head)
     head = head.replace('https://youfuhaishu.com/guide/bishu.html', URL).replace('img/beach.jpg', 'img/dusk.jpg')
     head = re.sub(r'<script type="application/ld\+json">.*?</script>\n', '', head, flags=re.S)
+    head = head.replace('</head>', _breadcrumb_ld('琅岐今日日出日落、天气和赶海潮汛', URL) + '</head>', 1)
     head = head.replace('</head>', '''<style>
 .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:18px 0 8px}
 .today div{border:1px solid rgba(0,0,0,.1);border-radius:10px;padding:12px 14px}
