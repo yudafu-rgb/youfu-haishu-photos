@@ -460,6 +460,13 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
 .alert{background:#fdecea;border-left:4px solid #c0392b;padding:10px 14px;border-radius:8px}
 .ok{background:#e8f6ec;border-left:4px solid #2e8b57;padding:10px 14px;border-radius:8px}
 .win{color:#2e8b57;font-size:13px}.tag.mid{background:rgba(0,0,0,.07)}.tag.small{background:rgba(0,0,0,.03)}
+.share-card{background:#1d2a33;color:#fff;border-radius:16px;padding:28px 24px;text-align:center;margin:20px 0 8px}
+.share-card .share-date{font-size:14px;opacity:.75;letter-spacing:2px}
+.share-card .share-tide{font-size:44px;font-weight:800;margin:10px 0 4px;color:#ffd34d}
+.share-card .share-sun{font-size:20px;font-weight:700}
+.share-card .share-note{font-size:15px;opacity:.85;margin-top:10px}
+.share-card .share-brand{font-size:13px;opacity:.6;margin-top:14px;letter-spacing:3px}
+.share-hint{text-align:center;font-size:13px;opacity:.6}
 </style>
 </head>''')
 
@@ -476,6 +483,14 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
     <p class="crumb"><a href="../">首页</a> / <a href="./">游玩攻略</a></p>
     <h1>琅岐今日日出日落、天气和赶海潮汛</h1>
     <p>{datestr}，星期{WEEK[today.weekday()]}，农历{t['lunar']}。本页每天自动更新，住在龙鼓度假村的客人可以照着安排看日出日落、赶海。</p>
+    <div class="share-card">
+      <div class="share-date">{today.month}月{today.day}日 星期{WEEK[today.weekday()]} · 农历{t['lunar']}</div>
+      <div class="share-tide">今日{t['tide']}</div>
+      <div class="share-sun">日出 {t['rise']} · 日落 {t['sset']}</div>
+      <div class="share-note">{t['note']}</div>
+      <div class="share-brand">福州琅岐岛 · 有福海墅</div>
+    </div>
+    <p class="share-hint">截图发给朋友，约他来赶海、看日出。</p>
 
     {''.join(f'<p class="alert">🌀 {typhoon_text(ty)}<br><small>路径来自日本气象厅预报，以<a href="http://typhoon.nmc.cn/">中央气象台台风网</a>和福州市气象台预警为准。</small></p>' for ty in TYPHOONS)}
     <div class="today">
