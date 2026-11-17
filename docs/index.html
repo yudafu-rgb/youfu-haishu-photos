@@ -145,7 +145,7 @@ var _hmt = _hmt || [];
   if (sun) {
     html += '<span class="ph-item" style="display:flex;gap:10px;align-items:center">'
       + '<img src="/img/sunrise.jpg" alt="日出" loading="lazy" width="96" height="64" style="width:96px;height:64px;object-fit:cover;border-radius:8px;flex:none">'
-      + '<span>今日日出 ' + sun.rise + ' · 日落 ' + sun.sset + ' · ' + sun.tide + '（' + sun.note + '） <a href="/guide/today.html">看今日详情</a></span></span>';
+      + '<span>今日日出 ' + sun.rise + ' · 日落 ' + sun.sset + ' · ' + sun.tide + '（' + sun.note + '） <a href="/guide/today.html">看今日详情</a>（AI 示意图）</span></span>';
   }
   var notes = (window.YF && window.YF.notes) || ['今天几点日出日落、是不是大潮？<a href="/guide/today.html">看今日日出日落和潮汛</a>'];
   if (notes.length > 1) notes = notes.slice(0, -1);  // 有具体提示时，不再显示通用的「看今日日落」那条
