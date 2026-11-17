@@ -518,6 +518,8 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
 </table>
 <p>{big_txt}</p>
 
+<p><a href="ganhai.html">看琅岐赶海攻略</a> · <a href="../#rooms">看沙滩旁的房型</a></p>
+
 <h2>赏月</h2>
 {''.join(f"<p>{n}</p>" for n in mnotes)}
 
