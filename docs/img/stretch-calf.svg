@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="小腿拉伸示意图：面向墙站立，前腿弯曲，后腿伸直、脚跟贴地">
+  <rect width="400" height="300" fill="#f4f1ea"/>
+  <!-- 地面 -->
+  <line x1="20" y1="262" x2="380" y2="262" stroke="#b8a88a" stroke-width="3" stroke-linecap="round"/>
+  <!-- 墙 -->
+  <line x1="72" y1="30" x2="72" y2="262" stroke="#8a7a5f" stroke-width="6" stroke-linecap="round"/>
+  <line x1="72" y1="30" x2="110" y2="30" stroke="#8a7a5f" stroke-width="6" stroke-linecap="round"/>
+  <!-- 人：面向左墙 -->
+  <g stroke="#2e4a5e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- 头 -->
+    <circle cx="158" cy="66" r="19" fill="#2e4a5e" stroke="none"/>
+    <!-- 躯干（向前倾） -->
+    <line x1="158" y1="88" x2="176" y2="162"/>
+    <!-- 手臂扶墙 -->
+    <line x1="162" y1="100" x2="78" y2="112"/>
+    <line x1="164" y1="112" x2="78" y2="138"/>
+    <!-- 前腿（弯曲，膝盖在前、脚在后） -->
+    <line x1="176" y1="162" x2="138" y2="210"/>
+    <line x1="138" y1="210" x2="150" y2="258"/>
+    <!-- 前脚（脚尖朝墙） -->
+    <line x1="150" y1="258" x2="128" y2="258"/>
+    <!-- 后腿（伸直） -->
+    <line x1="176" y1="162" x2="214" y2="210"/>
+    <line x1="214" y1="210" x2="252" y2="258"/>
+    <!-- 后脚（脚尖朝墙，脚跟贴地） -->
+    <line x1="252" y1="258" x2="228" y2="258"/>
+  </g>
+  <!-- 提示：后脚跟向下贴地 -->
+  <g>
+    <path d="M 252 226 L 252 246" stroke="#c05a2e" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 246 240 L 252 248 L 258 240" fill="none" stroke="#c05a2e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- 文字标注 -->
+  <text x="200" y="288" font-family="sans-serif" font-size="15" fill="#5a5348" text-anchor="middle">后腿伸直，脚跟贴地</text>
+</svg>
