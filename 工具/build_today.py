@@ -277,8 +277,10 @@ def write_daily_js(today):
     photos = [l.strip() for l in open(os.path.join(REPO, '工具', 'hero_photos.txt'), encoding='utf-8')
               if l.strip() and not l.startswith('#') and os.path.exists(os.path.join(DOCS, 'img', l.strip()))]
     hero = photos[today.toordinal() % len(photos)] if photos else 'hero.jpg'
+    info = day_info(today)
+    sun = {"rise": info["rise"], "sset": info["sset"], "gold": info["gold"], "tide": info["tide"], "note": info["note"]}
     js = ('// 由 工具/build_today.py 每天生成，不要手改\n'
-          f'window.YF = {json.dumps({"date": today.isoformat(), "hero": "/img/" + hero, "notes": notices(today)}, ensure_ascii=False)};\n'
+          f'window.YF = {json.dumps({"date": today.isoformat(), "hero": "/img/" + hero, "notes": notices(today), "sun": sun}, ensure_ascii=False)};\n'
           'document.documentElement.style.setProperty("--hero", "url(" + window.YF.hero + ")");\n')
     open(os.path.join(DOCS, 'daily.js'), 'w', encoding='utf-8').write(js)
 
@@ -445,7 +447,7 @@ def build(today):
     head = re.sub(r'(<meta name="description" content=")[^"]*', r'\g<1>' + desc, head)
     head = re.sub(r'(<meta property="og:title" content=")[^"]*', r'\g<1>琅岐今日日落和赶海潮汛', head)
     head = re.sub(r'(<meta property="og:description" content=")[^"]*', r'\g<1>' + desc, head)
-    head = head.replace('https://youfuhaishu.com/guide/bishu.html', URL).replace('img/beach.jpg', 'img/dusk.jpg')
+    head = head.replace('https://youfuhaishu.com/guide/bishu.html', URL).replace('img/beach.jpg', 'img/sunset.jpg')
     head = re.sub(r'<script type="application/ld\+json">.*?</script>\n', '', head, flags=re.S)
     head = head.replace('</head>', _breadcrumb_ld('琅岐今日日出日落、天气和赶海潮汛', URL) + '</head>', 1)
     head = head.replace('</head>', '''<style>
