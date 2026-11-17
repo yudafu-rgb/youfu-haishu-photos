@@ -60,7 +60,7 @@
     {"@type": "HotelRoom", "name": "海边大床房", "description": "一楼，1张大床，独立卫浴，基础2人。出门几步就是花园，往前走就到沙滩。", "occupancy": {"@type": "QuantitativeValue", "maxValue": 2}},
     {"@type": "HotelRoom", "name": "二楼海景双床房", "description": "二楼（201、202 两间），2张1.5米床，独立卫浴，二楼高、前面没什么遮挡，在房间里就能看到海，基础3人，带小孩的一家三口住刚好。", "occupancy": {"@type": "QuantitativeValue", "maxValue": 3}},
     {"@type": "HotelRoom", "name": "一楼双床房", "description": "一楼，2张床，独立卫浴，进出方便，离麻将桌和花园最近，基础3人。", "occupancy": {"@type": "QuantitativeValue", "maxValue": 3}},
-    {"@type": "HotelRoom", "name": "整栋别墅（包栋）", "description": "5间房、9张床，一般住18人左右。三层独用：一楼客厅麻将桌，二楼茶室、榻榻米，三楼天台。健身房位于红花阁二楼，三栋住客共用。超出基础人数每人每晚加50元，12岁以下儿童不算人数。", "occupancy": {"@type": "QuantitativeValue", "maxValue": 18}}
+    {"@type": "HotelRoom", "name": "整栋别墅（包栋）", "description": "5间房、9张床，一般住18人左右。三层独用：一楼客厅麻将桌，二楼茶室、榻榻米、健身房，三楼天台。超出基础人数每人每晚加50元，12岁以下儿童不算人数。", "occupancy": {"@type": "QuantitativeValue", "maxValue": 18}}
   ]
 }
 </script>
@@ -233,7 +233,7 @@ var _hmt = _hmt || [];
         <div>
           <h3>整栋别墅</h3>
           <div class="facts">5 间房 · 9 张床 · 一般住 18 人左右</div>
-          <p>三层整栋给你们一家用：一楼麻将牌桌，二楼茶室、榻榻米，三楼天台。健身房位于红花阁二楼，三栋住客共用。包栋客人可以用餐厅自己做饭，烧烤架免费用。</p>
+          <p>三层整栋给你们一家用：一楼麻将牌桌，二楼茶室、榻榻米和健身房，三楼天台。包栋客人可以用餐厅自己做饭，烧烤架免费用。</p>
           <p>家庭聚会、同学会、公司团建都合适。超出基础人数的每人每晚加 50 元，12 岁以下儿童不算人数；不提供加床。</p>
         </div>
       </article>
@@ -254,8 +254,8 @@ var _hmt = _hmt || [];
         <figcaption>别墅里面：客厅、榻榻米、双床房</figcaption>
       </figure>
       <figure class="vid tall">
-        <video src="video/beach-walk.mp4" poster="video/beach-walk.jpg" muted loop playsinline controls preload="none" aria-label="从别墅走到龙鼓海滩"></video>
-        <figcaption>从别墅走到龙鼓海滩，沿林间步道到退潮时的沙滩。</figcaption>
+        <video src="video/seaside.mp4?v=4" data-src-m="video/seaside-m.mp4?v=4" poster="video/seaside.jpg?v=4" muted loop playsinline controls preload="none" aria-label="从别墅走到海边，夜里的打铁花"></video>
+        <figcaption>从别墅走到海边</figcaption>
       </figure>
     </div>
   </div>
@@ -276,7 +276,7 @@ var _hmt = _hmt || [];
       <div class="floor">
         <img src="img/tatami.jpg" alt="有福海墅二楼榻榻米区：大片榻榻米、花朵坐垫和绿植，窗外是树" loading="lazy">
         <h3>二楼</h3>
-        <p>木茶桌的茶室和榻榻米。茶室备了茉莉花茶，可以免费尝一尝。</p>
+        <p>木茶桌的茶室、榻榻米、健身房。茶室备了茉莉花茶，可以免费尝一尝。</p>
       </div>
       <div class="floor">
         <img src="img/roof.jpg" alt="有福海墅三楼天台：一张长桌和一把遮阳伞，背后是树和天空" loading="lazy">
@@ -284,10 +284,28 @@ var _hmt = _hmt || [];
         <p>户外桌椅，白天晒太阳，晚上吹海风看月亮。</p>
       </div>
     </div>
+    <div class="night-yard">
+      <h3>晚上，院子亮灯了</h3>
+      <p>白天是明亮的花园，晚上地灯亮起来，窗户透出暖光，坐在院子里吹海风。</p>
+      <div class="floors">
+        <div class="floor">
+          <img src="img/night.jpg" alt="有福海墅夜里：白楼屋顶灯带亮着，院子里地灯亮着" loading="lazy">
+          <p>夜里的别墅，屋顶灯带和院子地灯都亮着。</p>
+        </div>
+        <div class="floor">
+          <img src="img/g/g-nightgarden.jpg" alt="有福海墅夜里的圆形花园：拱门和地灯亮着暖光" loading="lazy">
+          <p>夜里的圆形花园，拱门和地灯亮着暖光（AI 示意图）。</p>
+        </div>
+        <div class="floor">
+          <img src="img/g/g-nightgarden-stars.jpg" alt="有福海墅夜里的花园：星空、发光的拱门和地灯" loading="lazy">
+          <p>夜里的花园，星空和发光的拱门（AI 示意图）。</p>
+        </div>
+      </div>
+    </div>
     <div class="gym">
       <div class="gym-text">
         <h3>健身房</h3>
-        <p>红花阁二楼有一间玻璃隔出来的健身房，三栋住客共用：跑步机、可调健身凳和哑铃。出差、长住的客人不用出门也能练一练。</p>
+        <p>二楼有一间玻璃隔出来的健身房：跑步机、可调健身凳和哑铃。出差、长住的客人不用出门也能练一练。</p>
       </div>
       <img src="img/gym1.jpg" alt="有福海墅健身房：玻璃门隔开，里面有跑步机和健身器械" loading="lazy">
       <img src="img/gym2.jpg" alt="有福海墅健身房：窗边的跑步机，旁边是榻榻米" loading="lazy">
@@ -318,7 +336,7 @@ var _hmt = _hmt || [];
         <ul class="group-facts">
           <li><b>5 间房 · 9 张床</b>：<span>一栋一般住 18 人左右；人更多可以同时包相邻几栋，提前电话确认</span></li>
           <li><b>一楼</b>：<span>客厅、麻将桌、牌桌</span></li>
-          <li><b>二楼</b>：<span>茶室、榻榻米（健身房在红花阁二楼，三栋住客共用）</span></li>
+          <li><b>二楼</b>：<span>茶室、榻榻米（健身房在红花阁，三栋共用）</span></li>
           <li><b>三楼天台</b>：<span>户外桌椅，吹海风看日落；烧烤架免费（食材、炭自带）</span></li>
           <li><b>出门就是沙滩</b>：<span>沙滩游戏、大合照、退潮赶海</span></li>
           <li><b>交通</b>：<span>长乐机场约 30 分钟，福州市区约 40 分钟</span></li>
