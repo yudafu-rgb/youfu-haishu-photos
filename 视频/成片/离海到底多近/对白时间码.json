@@ -1,47 +1,51 @@
 {
-  "duration": 19.735,
+  "duration": 26.037,
   "lines": [
     {
       "index": 0,
       "speaker": "Vivian",
       "text": "你说离海近，不会是地图上近吧？",
       "start": 0.18,
-      "end": 2.837
+      "end": 2.9
     },
     {
       "index": 1,
       "speaker": "Ryan",
       "text": "不跟你比划，带你走一趟。",
-      "start": 2.977,
-      "end": 5.086
+      "start": 3.04,
+      "end": 5.2
     },
     {
       "index": 2,
       "speaker": "Vivian",
       "text": "导游怎么不说话了？",
-      "start": 5.366,
-      "end": 7.139
+      "start": 5.48,
+      "end": 7.32
     },
     {
       "index": 3,
       "speaker": "Ryan",
       "text": "让海说，今天不跟它抢麦。",
-      "start": 7.279,
-      "end": 9.787
+      "start": 7.46,
+      "end": 10.02
     },
     {
       "index": 4,
       "speaker": "Vivian",
       "text": "这声音，比工作群好听。",
-      "start": 10.987,
-      "end": 13.807
+      "start": 12.72,
+      "end": 15.597
     },
     {
       "index": 5,
       "speaker": "Ryan",
       "text": "它不催进度，也不艾特所有人。",
-      "start": 14.087,
-      "end": 16.595
+      "start": 15.877,
+      "end": 18.437
     }
-  ]
+  ],
+  "brand": {
+    "start": 18.577,
+    "text": "福州琅岐岛，有福海墅。离海多近，走给你看。"
+  }
 }
