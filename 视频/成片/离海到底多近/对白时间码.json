@@ -1,0 +1,47 @@
+{
+  "duration": 19.735,
+  "lines": [
+    {
+      "index": 0,
+      "speaker": "Vivian",
+      "text": "你说离海近，不会是地图上近吧？",
+      "start": 0.18,
+      "end": 2.837
+    },
+    {
+      "index": 1,
+      "speaker": "Ryan",
+      "text": "不跟你比划，带你走一趟。",
+      "start": 2.977,
+      "end": 5.086
+    },
+    {
+      "index": 2,
+      "speaker": "Vivian",
+      "text": "导游怎么不说话了？",
+      "start": 5.366,
+      "end": 7.139
+    },
+    {
+      "index": 3,
+      "speaker": "Ryan",
+      "text": "让海说，今天不跟它抢麦。",
+      "start": 7.279,
+      "end": 9.787
+    },
+    {
+      "index": 4,
+      "speaker": "Vivian",
+      "text": "这声音，比工作群好听。",
+      "start": 10.987,
+      "end": 13.807
+    },
+    {
+      "index": 5,
+      "speaker": "Ryan",
+      "text": "它不催进度，也不艾特所有人。",
+      "start": 14.087,
+      "end": 16.595
+    }
+  ]
+}
