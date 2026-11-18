@@ -1,0 +1,11 @@
+{
+  "title": "海浪上班，我下班",
+  "publish_at": "2026-11-20T20:00:00+08:00",
+  "timezone": "Asia/Shanghai",
+  "status": "scheduled_via_codex",
+  "page": "docs/shipin.html",
+  "card": "运营记录/官网发布/2026-11-20_海浪上班_频道卡片.html",
+  "marker": "approved-video:sea-clock-out-20261120",
+  "notes": "用户明确授权预约发布；媒体先准备，频道到时才插入。Github Actions新增自动推送权限未获自动审批，不采用该机制。",
+  "automation_id": "11-20"
+}
