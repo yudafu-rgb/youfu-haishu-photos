@@ -2,15 +2,16 @@
   "title": "海浪上班，我下班",
   "publish_at": "2026-11-20T07:00:00-05:00",
   "timezone": "Asia/Shanghai",
-  "status": "repository_submitted_pending_website_sync",
+  "status": "published_verified",
   "page": "docs/shipin.html",
   "card": "运营记录/官网发布/2026-11-20_海浪上班_频道卡片.html",
   "marker": "approved-video:sea-clock-out-20261120",
   "notes": "用户明确授权预约发布；媒体先准备，频道到时才插入。Github Actions新增自动推送权限未获自动审批，不采用该机制。",
   "automation_id": "11-20",
   "actual_prepared_at_utc": "2026-11-20T07:01:13.106719-05:00",
-  "website_status": "page_old_version_media_accessible",
+  "website_status": "live_card_verified",
   "content_commit": "c0383a1e03c00756d6b7075e7a3dc926e239ce92",
   "content_commit_at_utc": "2026-11-20T12:01:55Z",
-  "verification": "raw新卡片已核对；正式shipin.html HTTP200但未含新标记；封面HTTP200 image/jpeg，视频HTTP200 video/mp4，10455997字节；频道公开状态待后续每日运营核验。"
+  "verification": "正式shipin.html HTTP200且检出唯一新卡片；Last-Modified 2026-11-20T12:15:03Z。此前已核对封面与视频HTTP200；本轮未进行浏览器试听，不声称音频试听通过。",
+  "website_verified_at_utc": "2026-11-20T13:27:44.559911+00:00"
 }
