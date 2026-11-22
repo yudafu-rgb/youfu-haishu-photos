@@ -277,10 +277,8 @@ def write_daily_js(today):
     photos = [l.strip() for l in open(os.path.join(REPO, '工具', 'hero_photos.txt'), encoding='utf-8')
               if l.strip() and not l.startswith('#') and os.path.exists(os.path.join(DOCS, 'img', l.strip()))]
     hero = photos[today.toordinal() % len(photos)] if photos else 'hero.jpg'
-    info = day_info(today)
-    sun = {"rise": info["rise"], "sset": info["sset"], "gold": info["gold"], "tide": info["tide"], "note": info["note"]}
     js = ('// 由 工具/build_today.py 每天生成，不要手改\n'
-          f'window.YF = {json.dumps({"date": today.isoformat(), "hero": "/img/" + hero, "notes": notices(today), "sun": sun}, ensure_ascii=False)};\n'
+          f'window.YF = {json.dumps({"date": today.isoformat(), "hero": "/img/" + hero, "notes": notices(today)}, ensure_ascii=False)};\n'
           'document.documentElement.style.setProperty("--hero", "url(" + window.YF.hero + ")");\n')
     open(os.path.join(DOCS, 'daily.js'), 'w', encoding='utf-8').write(js)
 
@@ -447,7 +445,7 @@ def build(today):
     head = re.sub(r'(<meta name="description" content=")[^"]*', r'\g<1>' + desc, head)
     head = re.sub(r'(<meta property="og:title" content=")[^"]*', r'\g<1>琅岐今日日落和赶海潮汛', head)
     head = re.sub(r'(<meta property="og:description" content=")[^"]*', r'\g<1>' + desc, head)
-    head = head.replace('https://youfuhaishu.com/guide/bishu.html', URL).replace('img/beach.jpg', 'img/sunset.jpg')
+    head = head.replace('https://youfuhaishu.com/guide/bishu.html', URL).replace('img/beach.jpg', 'img/dusk.jpg')
     head = re.sub(r'<script type="application/ld\+json">.*?</script>\n', '', head, flags=re.S)
     head = head.replace('</head>', _breadcrumb_ld('琅岐今日日出日落、天气和赶海潮汛', URL) + '</head>', 1)
     head = head.replace('</head>', '''<style>
@@ -462,13 +460,6 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
 .alert{background:#fdecea;border-left:4px solid #c0392b;padding:10px 14px;border-radius:8px}
 .ok{background:#e8f6ec;border-left:4px solid #2e8b57;padding:10px 14px;border-radius:8px}
 .win{color:#2e8b57;font-size:13px}.tag.mid{background:rgba(0,0,0,.07)}.tag.small{background:rgba(0,0,0,.03)}
-.share-card{background:#1d2a33;color:#fff;border-radius:16px;padding:28px 24px;text-align:center;margin:20px 0 8px}
-.share-card .share-date{font-size:14px;opacity:.75;letter-spacing:2px}
-.share-card .share-tide{font-size:44px;font-weight:800;margin:10px 0 4px;color:#ffd34d}
-.share-card .share-sun{font-size:20px;font-weight:700}
-.share-card .share-note{font-size:15px;opacity:.85;margin-top:10px}
-.share-card .share-brand{font-size:13px;opacity:.6;margin-top:14px;letter-spacing:3px}
-.share-hint{text-align:center;font-size:13px;opacity:.6}
 </style>
 </head>''')
 
@@ -485,14 +476,6 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
     <p class="crumb"><a href="../">首页</a> / <a href="./">游玩攻略</a></p>
     <h1>琅岐今日日出日落、天气和赶海潮汛</h1>
     <p>{datestr}，星期{WEEK[today.weekday()]}，农历{t['lunar']}。本页每天自动更新，住在龙鼓度假村的客人可以照着安排看日出日落、赶海。</p>
-    <div class="share-card">
-      <div class="share-date">{today.month}月{today.day}日 星期{WEEK[today.weekday()]} · 农历{t['lunar']}</div>
-      <div class="share-tide">今日{t['tide']}</div>
-      <div class="share-sun">日出 {t['rise']} · 日落 {t['sset']}</div>
-      <div class="share-note">{t['note']}</div>
-      <div class="share-brand">福州琅岐岛 · 有福海墅</div>
-    </div>
-    <p class="share-hint">截图发给朋友，约他来赶海、看日出。</p>
 
     {''.join(f'<p class="alert">🌀 {typhoon_text(ty)}<br><small>路径来自日本气象厅预报，以<a href="http://typhoon.nmc.cn/">中央气象台台风网</a>和福州市气象台预警为准。</small></p>' for ty in TYPHOONS)}
     <div class="today">
@@ -518,8 +501,6 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
 </table>
 <p>{big_txt}</p>
 
-<p><a href="ganhai.html">看琅岐赶海攻略</a> · <a href="../#rooms">看沙滩旁的房型</a></p>
-
 <h2>赏月</h2>
 {''.join(f"<p>{n}</p>" for n in mnotes)}
 
@@ -528,7 +509,7 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
   <li><strong>看日出：</strong>度假村门口的沙滩就能看海上日出，出门走几步，很壮观。想登高看，<a href="bishu.html">白云山观日台</a>也是福州一带看日出的好地方，从度假村开车约 20 分钟，天没亮也能开到观日台附近。</li>
   <li><strong>看日落：</strong>日落前半小时到门口沙滩或山顶，<a href="sunset.html">看日落的几个地方</a>。</li>
   <li><strong>赶海：</strong>大潮日退得最远。具体几点退潮，出发前在天气 App 搜「琅岐 潮汐」，退潮前后两小时最合适。<a href="ganhai.html">赶海攻略</a></li>
-  <li><strong>买海鲜：</strong>琅岐闽江渔港码头傍晚 17:00–20:00 渔船回港，货最新鲜最全，渔民直接摆摊零售；早上 5:30–8:00 有零星上岸（以当日渔民实际靠岸为准）。{'现在是休渔期，码头货少。' if 501 <= today.month * 100 + today.day <= 916 else ''}<a href="fishing-port.html">渔港攻略</a></li>
+  <li><strong>买海鲜：</strong>琅岐闽江渔港码头傍晚 17:00–20:00 渔船回港，货最新鲜最全，渔民直接摆摊零售；早上 5:30–8:00 有零星上岸。{'现在是休渔期，码头货少。' if 501 <= today.month * 100 + today.day <= 916 else ''}<a href="fishing-port.html">渔港攻略</a></li>
   <li><strong>安全：</strong>涨潮很快，看到水开始往回漫就上岸；礁石滑，穿防滑鞋。</li>
 </ul>
 <p style="font-size:14px;opacity:.7">日出日落、月相按龙鼓度假村坐标计算，误差一两分钟。天气来自 Open-Meteo 预报，出发前再看一眼手机天气。潮汛按农历推算，只表示潮水大小，不是精确潮时，以潮汐表为准。</p>

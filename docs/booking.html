@@ -132,9 +132,8 @@ var _hmt = _hmt || [];
 <div class="line"><span>入住晚数</span><span id="pNights">—</span></div>
 <div class="line"><span>平日（周日至周四）</span><span id="pWeekday">—</span></div>
 <div class="line"><span>周末（周五、周六）</span><span id="pWeekend">—</span></div>
-<div class="line"><span>春节（2027 年 2 月 5 日—2 月 20 日）</span><span id="pSpring">—</span></div>
 <div class="line total"><span>合计</span><span id="pTotal">请先选日期</span></div>
-<div class="note">单间平日 ¥388/晚，周末（周五、周六）¥488/晚，春节 ¥688/晚；整栋包栋平日 ¥1798/晚，周末 ¥1988/晚，春节 ¥2988/晚。春节为 2027 年 2 月 5 日—2 月 20 日（除夕至正月十五）。入住 14:00，退房 12:00。价格以云端库存接口返回为准，此处为本地试算。</div>
+<div class="note">单间平日 ¥388/晚，周末（周五、周六）¥488/晚；整栋包栋平日 ¥1798/晚，周末 ¥1988/晚。入住 14:00，退房 12:00。价格以云端库存接口返回为准，此处为本地试算。</div>
 </div>
 
 <div class="f-group">
@@ -145,16 +144,7 @@ var _hmt = _hmt || [];
 <label for="guestPhone">手机号码</label>
 <input type="tel" id="guestPhone" placeholder="请填写手机号码，用于接收确认信息" autocomplete="tel">
 </div>
-<div class="f-group">
-<label for="guestWechat">微信号（选填）</label>
-<input type="text" id="guestWechat" placeholder="选填，方便我们加微信确认" autocomplete="off">
-</div>
-<div class="f-group">
-<label for="guestNote">备注（选填）</label>
-<textarea id="guestNote" rows="2" placeholder="选填：需要几栋、是否带宠物、大概几人、其他需求"></textarea>
-</div>
 
-<p class="note" style="margin:12px 0">押金：单间 100 元、整栋 500 元，入住时收、退房原路退回。取消：单间入住前 1 天 14:00 前免费；整栋入住 7 天前免费。价格以电话确认为准。</p>
 <button class="btn-book" id="bookBtn" type="button">提交预订申请</button>
 <div class="msg" id="msg" role="alert"></div>
 
@@ -166,7 +156,6 @@ var _hmt = _hmt || [];
     <span>福建省福州市马尾区琅岐镇龙鼓度假村101号</span>
   </div>
   <div class="wrap" style="justify-content:center;margin-top:12px"><a href="http://beian.miit.gov.cn/" target="_blank" rel="noopener">闽ICP备2026044308号</a></div>
-  <div class="wrap" style="justify-content:center;margin-top:12px"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=35010502000490" target="_blank" rel="noopener">闽公网安备35010502000490号</a></div>
 </footer>
 <details class="wx-float">
   <summary aria-label="微信咨询预订"><span>微信<br>咨询</span></summary>
@@ -186,12 +175,10 @@ var _hmt = _hmt || [];
 <script>
 // 价格表（与 PMS 口径一致；如调价只改这里，后端以云端为准）
 var PRICES = {
-  twin:  {name: "单间 · 海景双床房", weekday: 388, weekend: 488, spring: 688},
-  king:  {name: "单间 · 海景大床房", weekday: 388, weekend: 488, spring: 688},
-  villa: {name: "整栋包栋", weekday: 1798, weekend: 1988, spring: 2988}
+  twin:  {name: "单间 · 海景双床房", weekday: 388, weekend: 488},
+  king:  {name: "单间 · 海景大床房", weekday: 388, weekend: 488},
+  villa: {name: "整栋包栋", weekday: 1798, weekend: 1988}
 };
-// 春节价适用日期（与 price.html 口径一致：除夕至正月十五，2027 年 2 月 5 日—2 月 20 日）；
-var SPRING_START = "2027-02-05", SPRING_END = "2027-02-20";
 // 后端接口（云开发云函数 HTTP 触发器，上线时填真实地址）
 var API = {
   checkAvailability: "",  // POST {roomType, checkIn, checkOut} -> {available, remaining}
@@ -215,25 +202,21 @@ function calc(){
   var ci = $("checkin").value, co = $("checkout").value;
   var pr = PRICES[room];
   $("pRoom").textContent = pr.name;
-  if(!ci || !co){ $("pNights").textContent = "—"; $("pWeekday").textContent = "—"; $("pWeekend").textContent = "—"; $("pSpring").textContent = "—"; $("pTotal").textContent = "请先选日期"; return null; }
+  if(!ci || !co){ $("pNights").textContent = "—"; $("pWeekday").textContent = "—"; $("pWeekend").textContent = "—"; $("pTotal").textContent = "请先选日期"; return null; }
   var d1 = new Date(ci + "T00:00:00"), d2 = new Date(co + "T00:00:00");
   var nights = Math.round((d2 - d1) / 86400000);
-  if(nights <= 0){ $("pNights").textContent = "退房日期须晚于入住日期"; $("pWeekday").textContent = "—"; $("pWeekend").textContent = "—"; $("pSpring").textContent = "—"; $("pTotal").textContent = "—"; return null; }
-  var wd = 0, we = 0, sp = 0, total = 0;
+  if(nights <= 0){ $("pNights").textContent = "退房日期须晚于入住日期"; $("pWeekday").textContent = "—"; $("pWeekend").textContent = "—"; $("pTotal").textContent = "—"; return null; }
+  var wd = 0, we = 0, total = 0;
   for(var i = 0; i < nights; i++){
     var d = new Date(d1.getTime() + i * 86400000);
-    var iso = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
     var day = d.getDay(); // 5=周五, 6=周六
-    var rate;
-    if(iso >= SPRING_START && iso <= SPRING_END){ rate = pr.spring; sp++; }
-    else if(day === 5 || day === 6){ rate = pr.weekend; we++; }
-    else { rate = pr.weekday; wd++; }
+    var rate = (day === 5 || day === 6) ? pr.weekend : pr.weekday;
+    if(day === 5 || day === 6){ we++; } else { wd++; }
     total += rate;
   }
   $("pNights").textContent = nights + " 晚";
   $("pWeekday").textContent = wd ? wd + " 晚 × ¥" + pr.weekday : "—";
   $("pWeekend").textContent = we ? we + " 晚 × ¥" + pr.weekend : "—";
-  $("pSpring").textContent = sp ? sp + " 晚 × ¥" + pr.spring : "—";
   $("pTotal").textContent = "¥" + total;
   return {nights: nights, total: total};
 }
@@ -275,7 +258,7 @@ $("bookBtn").addEventListener("click", function(){
   fetch(API.createOrder, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({roomType: room, checkIn: $("checkin").value, checkOut: $("checkout").value, guests: $("guests").value, name: name, phone: phone, wechat: $("guestWechat").value.trim(), note: $("guestNote").value.trim(), total: r.total})
+    body: JSON.stringify({roomType: room, checkIn: $("checkin").value, checkOut: $("checkout").value, guests: $("guests").value, name: name, phone: phone, total: r.total})
   }).then(function(res){ return res.json(); }).then(function(data){
     if(data && data.payParams){
       showMsg("预订申请已创建，订单号 " + (data.orderId || "") + "，我们会电话确认房态与价格，确认后即为您保留房间。", true);
