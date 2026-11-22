@@ -528,7 +528,7 @@ table.week th,table.week td{padding:8px 6px;border-bottom:1px solid rgba(0,0,0,.
   <li><strong>看日出：</strong>度假村门口的沙滩就能看海上日出，出门走几步，很壮观。想登高看，<a href="bishu.html">白云山观日台</a>也是福州一带看日出的好地方，从度假村开车约 20 分钟，天没亮也能开到观日台附近。</li>
   <li><strong>看日落：</strong>日落前半小时到门口沙滩或山顶，<a href="sunset.html">看日落的几个地方</a>。</li>
   <li><strong>赶海：</strong>大潮日退得最远。具体几点退潮，出发前在天气 App 搜「琅岐 潮汐」，退潮前后两小时最合适。<a href="ganhai.html">赶海攻略</a></li>
-  <li><strong>买海鲜：</strong>琅岐闽江渔港码头傍晚 17:00–20:00 渔船回港，货最新鲜最全，渔民直接摆摊零售；早上 5:30–8:00 有零星上岸。{'现在是休渔期，码头货少。' if 501 <= today.month * 100 + today.day <= 916 else ''}<a href="fishing-port.html">渔港攻略</a></li>
+  <li><strong>买海鲜：</strong>琅岐闽江渔港码头傍晚 17:00–20:00 渔船回港，货最新鲜最全，渔民直接摆摊零售；早上 5:30–8:00 有零星上岸（以当日渔民实际靠岸为准）。{'现在是休渔期，码头货少。' if 501 <= today.month * 100 + today.day <= 916 else ''}<a href="fishing-port.html">渔港攻略</a></li>
   <li><strong>安全：</strong>涨潮很快，看到水开始往回漫就上岸；礁石滑，穿防滑鞋。</li>
 </ul>
 <p style="font-size:14px;opacity:.7">日出日落、月相按龙鼓度假村坐标计算，误差一两分钟。天气来自 Open-Meteo 预报，出发前再看一眼手机天气。潮汛按农历推算，只表示潮水大小，不是精确潮时，以潮汐表为准。</p>
